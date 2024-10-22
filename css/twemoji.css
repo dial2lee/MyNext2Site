@@ -244,8 +244,8 @@
 .twa-face-with-symbols-on-mouth {
   background-image: url('https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/svg/1f92c.svg');
 }
-.twa-flag-china {
-  background-image: url('http://image.diallee.com/flag_cn.svg');
+.twa-flag-vietnam {
+  background-image: url('https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/svg/1f1fb-1f1f3.svg');
 }
 .twa-hammer-and-wrench {
   background-image: url('https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/svg/1f6e0.svg');
@@ -372,6 +372,9 @@
 }
 .twa-bullseye {
   background-image: url('https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/svg/1f3af.svg');
+}
+.twa-robot {
+  background-image: url('https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/svg/1f916.svg');
 }
 .twa-java {
   background-image: url('http://image.diallee.com/java.svg');

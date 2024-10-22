@@ -43,7 +43,7 @@ export function PostCardGridView({ post }: { post: CoreContent<Blog> }) {
             <span>{Math.ceil(readingTime.minutes)} 分钟读</span>
           </div>
           <div className="group relative">
-            <h3 className="text-xl font-semibold leading-6">
+            <h3 className="text-xl leading-6 font-semibold">
               <Link href={`/${path}`}>
                 <GrowingUnderline>{title}</GrowingUnderline>
               </Link>

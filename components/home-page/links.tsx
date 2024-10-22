@@ -1,24 +1,24 @@
+import { GrowingUnderline } from '~/components/ui/growing-underline'
 import { Link } from '~/components/ui/link'
 import { Twemoji } from '~/components/ui/twemoji'
-import { GrowingUnderline } from '~/components/ui/growing-underline'
 // import { SITE_METADATA } from '~/data/site-metadata'
 
 const LINKS = [
   {
-    title: `我的文章`,
-    href: `/blog`,
+    title: '我的文章',
+    href: '/blog',
     emoji: 'memo',
     event: 'home-link-blog',
   },
   {
-    title: `零散的代码片段或者知识点`,
-    href: `/snippets`,
+    title: '零散的代码片段或者知识点',
+    href: '/snippets',
     emoji: 'dna',
     event: 'home-link-snippets',
   },
   {
-    title: `关于我的更多信息`,
-    href: `/about`,
+    title: '关于我的更多信息',
+    href: '/about',
     emoji: 'smiling-face-with-sunglasses',
     event: 'home-link-about',
   },

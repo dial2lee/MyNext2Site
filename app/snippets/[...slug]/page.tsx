@@ -1,15 +1,14 @@
 import type { Author, Snippet } from 'contentlayer/generated'
 import { allAuthors, allSnippets } from 'contentlayer/generated'
-// import 'css/prism.css'
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { MDX_COMPONENTS } from '~/components/mdx'
+import { MDXLayoutRenderer } from '~/components/mdx/layout-renderer'
 import { SITE_METADATA } from '~/data/site-metadata'
 import { PostBanner } from '~/layouts/post-banner'
 import { PostLayout } from '~/layouts/post-layout'
 import { PostSimple } from '~/layouts/post-simple'
 import { allCoreContent, coreContent } from '~/utils/contentlayer'
-import { MDXLayoutRenderer } from '~/components/mdx/layout-renderer'
 import { sortPosts } from '~/utils/misc'
 
 const DEFAULT_LAYOUT = 'PostSimple'
@@ -19,11 +18,10 @@ const LAYOUTS = {
   PostBanner,
 }
 
-export async function generateMetadata({
-  params,
-}: {
-  params: { slug: string[] }
+export async function generateMetadata(props: {
+  params: Promise<{ slug: string[] }>
 }): Promise<Metadata | undefined> {
+  let params = await props.params
   let slug = decodeURI(params.slug.join('/'))
   let snippet = allSnippets.find((s) => s.slug === slug)
   let authorList = snippet?.authors || ['default']
@@ -73,10 +71,13 @@ export async function generateMetadata({
 }
 
 export let generateStaticParams = async () => {
-  return allSnippets.map((s) => ({ slug: s.slug.split('/').map((name) => decodeURI(name)) }))
+  return allSnippets.map((s) => ({
+    slug: s.slug.split('/').map((name) => decodeURI(name)),
+  }))
 }
 
-export default async function Page({ params }: { params: { slug: string[] } }) {
+export default async function Page(props: { params: Promise<{ slug: string[] }> }) {
+  let params = await props.params
   let slug = decodeURI(params.slug.join('/'))
   // Filter out drafts in production
   let sortedCoreContents = allCoreContent(sortPosts(allSnippets))
@@ -95,7 +96,7 @@ export default async function Page({ params }: { params: { slug: string[] } }) {
   })
   let mainContent = coreContent(snippet)
   let jsonLd = snippet.structuredData
-  jsonLd['author'] = authorDetails.map((author) => {
+  jsonLd.author = authorDetails.map((author) => {
     return {
       '@type': 'Person',
       name: author.name,
@@ -108,6 +109,7 @@ export default async function Page({ params }: { params: { slug: string[] } }) {
     <>
       <script
         type="application/ld+json"
+        // biome-ignore lint/security/noDangerouslySetInnerHtml: <explanation>
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <Layout content={mainContent} authorDetails={authorDetails} next={next} prev={prev}>

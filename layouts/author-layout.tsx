@@ -48,7 +48,7 @@ export function AuthorLayout({ children }: Props) {
               </p>
             </div>
             <div>
-              <div className="mb-[1em] mt-[2em] flex items-center justify-between [&>h2]:my-0">
+              <div className="mt-[2em] mb-[1em] flex items-center justify-between [&>h2]:my-0">
                 <h2>我的职业生涯</h2>
                 {/*<Button as="a" href="/static/resume.pdf" target="_blank">*/}
                 {/*  <span>简历</span>*/}
@@ -89,20 +89,16 @@ export function AuthorLayout({ children }: Props) {
               </p>
               <div>
                 <h2>博客成长史</h2>
-                <p>
-                  <div>自2017年开始构建我的个人博客。</div>
-                  <div>
-                    最初，我的博客时建立在GitHub的个人主页之上，享受着开源社区的便利与支持。
-                  </div>
-                  然而，出于特定考量，博客迁移至Coding平台的个人主页服务，继续我的写作与分享之路。
-                  <div>
-                    随着对博客功能性和灵活性需求的增长，我决定采用Next.js框架，并将其部署在Vercel平台上，以追求更佳的用户体验和技术实现。
-                  </div>
-                  <div>
-                    随着时间推移，为了进一步提升博客的稳定性与自主控制权，我购置了网络存储设备（NAS），并在其上通过容器化技术部署了我的博客，
-                    同时利用阿里云的服务进行外部访问的优化与中转。如今，我的个人博客已在NAS上稳健运行，成为我日常思考与创意表达的重要平台。
-                  </div>
-                </p>
+                <div>自2017年开始构建我的个人博客。</div>
+                <div>最初，我的博客时建立在GitHub的个人主页之上，享受着开源社区的便利与支持。</div>
+                然而，出于特定考量，博客迁移至Coding平台的个人主页服务，继续我的写作与分享之路。
+                <div>
+                  随着对博客功能性和灵活性需求的增长，我决定采用Next.js框架，并将其部署在Vercel平台上，以追求更佳的用户体验和技术实现。
+                </div>
+                <div>
+                  随着时间推移，为了进一步提升博客的稳定性与自主控制权，我购置了网络存储设备（NAS），并在其上通过容器化技术部署了我的博客，
+                  同时利用阿里云的服务进行外部访问的优化与中转。如今，我的个人博客已在NAS上稳健运行，成为我日常思考与创意表达的重要平台。
+                </div>
               </div>
             </div>
             <div>

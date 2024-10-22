@@ -49,7 +49,7 @@ export function PostCardListView({
             <div className="space-y-3">
               <dl className="text-sm">
                 <dt className="sr-only">Published on</dt>
-                <dd className="font-medium leading-6 text-gray-500 dark:text-gray-400">
+                <dd className="leading-6 font-medium text-gray-500 dark:text-gray-400">
                   <time dateTime={date}>{formatDate(date)}</time>
                   <span className="mx-2 text-gray-400">/</span>
                   <span>{Math.ceil(readingTime.minutes)} 分钟读</span>
@@ -64,11 +64,11 @@ export function PostCardListView({
               </h2>
               <TagsList tags={tags} />
             </div>
-            <div className="line-clamp-2 text-gray-500 dark:text-gray-400 md:line-clamp-3">
+            <div className="line-clamp-2 text-gray-500 md:line-clamp-3 dark:text-gray-400">
               {summary}
             </div>
           </div>
-          <div className="text-base font-medium leading-6">
+          <div className="text-base leading-6 font-medium">
             <Link
               href={`/blog/${slug}`}
               className="inline-flex items-center gap-2 text-gray-600 dark:text-gray-300"

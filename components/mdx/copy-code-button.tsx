@@ -25,19 +25,23 @@ export function CopyCodeButton({
       preTag = figure?.querySelector('pre') as HTMLPreElement
     }
     if (preTag) {
-      navigator.clipboard.writeText(preTag.textContent!)
-      setCopied(true)
-      clearTimeout(timeoutId)
-      timeoutId = setTimeout(() => setCopied(false), 2000)
+      let textContent = preTag.textContent
+      if (textContent) {
+        navigator.clipboard.writeText(textContent)
+        setCopied(true)
+        clearTimeout(timeoutId)
+        timeoutId = setTimeout(() => setCopied(false), 2000)
+      }
     }
   }
 
   return (
     <button
+      type="button"
       aria-label="Copy code"
       className={clsx([
         'copy-code',
-        'bg-solarized-light p-2 dark:bg-github-dark-dimmed',
+        'bg-solarized-light dark:bg-github-dark-dimmed p-2',
         className,
       ])}
       onClick={handleCopy}

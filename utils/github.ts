@@ -1,4 +1,4 @@
-import { graphql, type GraphQlQueryResponseData } from '@octokit/graphql'
+import { type GraphQlQueryResponseData, graphql } from '@octokit/graphql'
 import type { GithubRepository } from '~/types/data'
 
 const HISTORY_QUERY = `
@@ -27,14 +27,14 @@ const HISTORY_QUERY = `
 `
 
 export async function fetchRepoData({
-  repo,
+  repo = '',
   includeLastCommit = false,
 }: {
   repo: string
   includeLastCommit?: boolean
 }): Promise<GithubRepository | null> {
-  if (!process.env.GITHUB_API_TOKEN) {
-    console.error('Missing `GITHUB_API_TOKEN`')
+  if (!process.env.GITHUB_API_TOKEN || !repo) {
+    console.error('Missing `GITHUB_API_TOKEN` or `repo`')
     return null
   }
   try {
@@ -80,7 +80,7 @@ export async function fetchRepoData({
     )
     if (includeLastCommit) {
       repository.lastCommit = repository.defaultBranchRef.target.history.edges[0].node
-      delete repository.defaultBranchRef
+      repository.defaultBranchRef = undefined
     }
     repository.languages = repository.languages.edges.map((edge) => {
       return {

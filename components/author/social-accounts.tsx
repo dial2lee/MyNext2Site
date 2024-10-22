@@ -10,7 +10,7 @@ export function SocialAccounts({ className }: { className?: string }) {
         href={SITE_METADATA.github}
         target="_blank"
         data-umami-event="contact-github"
-        className="text-gray-900 hover:text-primary-500 dark:text-gray-100 dark:hover:text-primary-400"
+        className="hover:text-primary-500 dark:hover:text-primary-400 text-gray-900! dark:text-gray-100!"
         rel="noopener noreferrer"
       >
         <span className="sr-only">Github</span>
@@ -40,7 +40,7 @@ export function SocialAccounts({ className }: { className?: string }) {
         href={`mailto:${SITE_METADATA.email}`}
         target="_self"
         data-umami-event="contact-mail"
-        className="text-gray-900 hover:text-primary-500 dark:text-gray-100 dark:hover:text-primary-400"
+        className="hover:text-primary-500 dark:hover:text-primary-400 text-gray-900! dark:text-gray-100!"
         rel="noopener noreferrer"
       >
         <span className="sr-only">Mail</span>

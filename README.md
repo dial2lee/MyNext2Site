@@ -4,7 +4,7 @@
 <p align="center"><i>喜欢这个项目吗？请访问我的<a href="https://www.diallee.com">个人网站</a></i></p>
 <br>
 
-此博客托管在 [Vercel](https://vercel.com/)上， 基于 **Tailwind Nextjs Starter Blog**使用 [Next.js](https://nextjs.org/) 和 [Tailwind CSS](https://tailwindcss.com/) 创建。
+此博客部署在阿里云服务器上， 基于 **Tailwind Nextjs Starter Blog**使用 [Next.js](https://nextjs.org/) 和 [Tailwind CSS](https://tailwindcss.com/) 创建。
 
 [![Next][Next.js]][Next-url] [![MDX][MDX]][MDX-url] [![Vercel][Vercel]][Vercel-url] [![React][React]][React-url] [![Typescript][Typescript]][Typescript-url] [![Tailwind CSS][Tailwind CSS]][Tailwind CSS-url]
 
@@ -24,15 +24,13 @@ drizzle.config.ts文件和db目录是数据库配置、数据表、以及数据�
 
 <!-- MARKDOWN LINKS & IMAGES -->
 
-[Next.js]: https://img.shields.io/badge/next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white
-[Next-url]: https://nextjs.org/
-[Typescript]: https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white
-[Typescript-url]: https://www.typescriptlang.org/
-[Tailwind CSS]: https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white
-[Tailwind CSS-url]: https://tailwindcss.com/
-[MDX]: https://img.shields.io/badge/MDX-000000?style=for-the-badge&logo=mdx&logoColor=white
-[MDX-url]: https://mdxjs.com/
-[React]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
-[React-url]: https://reactjs.org/
-[Vercel]: https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white
-[Vercel-url]: https://vercel.com/
+[![Next.js](https://img.shields.io/badge/next.js-000?logo=next.js&logoColor=white)](https://nextjs.org/)
+[![React](https://img.shields.io/badge/react-20232A?logo=react&logoColor=61DAFB)](https://react.dev/)
+[![Tailwind CSS](https://img.shields.io/badge/tailwindcss-06B6D4?logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
+[![TypeScript](https://img.shields.io/badge/typescript-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![MDX](https://img.shields.io/badge/mdx-1a1a1a?logo=mdx&logoColor=white)](https://mdxjs.com/)
+[![Vercel](https://img.shields.io/badge/vercel-000?logo=vercel&logoColor=white)](https://vercel.com/)
+[![Umami](https://img.shields.io/badge/umami-262626?logo=umami&logoColor=white)](https://umami.is/)
+[![Supabase](https://img.shields.io/badge/supabase-3ECF8E?logo=supabase&logoColor=white)](https://supabase.com/)
+[![Drizzle ORM](https://img.shields.io/badge/drizzle%20orm-1a1a1a?logo=drizzle&logoColor=white)](https://orm.drizzle.team/)
+[![Shiki](https://img.shields.io/badge/shiki-ff4d6d?logo=shiki&logoColor=white)](https://shiki.matsu.io/)

@@ -1,6 +1,6 @@
-import { eq, and } from 'drizzle-orm'
+import { and, eq } from 'drizzle-orm'
 import { db } from './index'
-import { statsTable, type StatsType } from './schema'
+import { type SelectStats, type StatsType, statsTable } from './schema'
 
 export async function getBlogStats(type: StatsType, slug: string) {
   let stats = await db
@@ -17,17 +17,15 @@ export async function getBlogStats(type: StatsType, slug: string) {
 export async function updateBlogStats(
   type: StatsType,
   slug: string,
-  updates: { [key: string]: any }
+  updates: Omit<SelectStats, 'type' | 'slug'>
 ) {
   let currentStats = await getBlogStats(type, slug)
-
   // Safeguard against negative updates
   for (let key in updates) {
     if (typeof updates[key] === 'number' && updates[key] < currentStats[key]) {
       updates[key] = currentStats[key]
     }
   }
-
   let updatedStats = await db
     .update(statsTable)
     .set(updates)

@@ -1,4 +1,4 @@
-import { NextResponse, type NextRequest } from 'next/server'
+import { type NextRequest, NextResponse } from 'next/server'
 
 async function convertkitSubscribe(email: string) {
   let { CONVERTKIT_FORM_ID, CONVERTKIT_API_KEY } = process.env
@@ -18,7 +18,7 @@ export async function POST(req: NextRequest) {
     let response = await convertkitSubscribe(email)
     if (response.status >= 400) {
       return NextResponse.json(
-        { error: `There was an error subscribing to the list` },
+        { error: 'There was an error subscribing to the list' },
         { status: response.status }
       )
     }

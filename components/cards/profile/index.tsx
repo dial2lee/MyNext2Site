@@ -1,7 +1,8 @@
 'use client'
 
 import { clsx } from 'clsx'
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import type React from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { Image } from '~/components/ui/image'
 // import { SpotifyNowPlaying } from '~/components/ui/now-playing'
 import { SITE_METADATA } from '~/data/site-metadata'
@@ -58,8 +59,8 @@ export function ProfileCard() {
         style={style}
         className={clsx(
           'flex flex-col overflow-hidden transition-all duration-200 ease-out md:rounded-lg',
-          'bg-white shadow-demure dark:bg-dark dark:shadow-mondegreen',
-          'outline outline-1 outline-gray-100 dark:outline-gray-600'
+          'shadow-demure dark:bg-dark dark:shadow-mondegreen bg-white',
+          'outline-1 outline-gray-100 outline-solid dark:outline-gray-600'
         )}
       >
         <Image
@@ -74,7 +75,7 @@ export function ProfileCard() {
           loading="eager"
         />
         <ProfileCardInfo />
-        <span className="h-1.5 bg-gradient-to-r from-green-300 via-blue-500 to-purple-600" />
+        <span className="h-1.5 bg-linear-to-r from-green-300 via-blue-500 to-purple-600" />
       </div>
     </div>
   )

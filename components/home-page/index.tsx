@@ -21,10 +21,10 @@ export function Home({
       <div className="py-6 md:pb-8 xl:grid xl:grid-cols-3">
         <div className="space-y-4 md:space-y-6 md:pr-8 xl:col-span-2">
           <Greeting />
-          <div className="text-base leading-7 text-gray-600 dark:text-gray-400 md:text-lg md:leading-8">
+          <div className="text-base leading-7 text-gray-600 md:text-lg md:leading-8 dark:text-gray-400">
             <Intro />
             <TypedBios />
-            <div className="mb-6 mt-4 md:mb-8">
+            <div className="mt-4 mb-6 md:mb-8">
               <p>我从2009年开始学习编码，从那以后就迷上了。</p>
               <p>我在2011年找到了第一份Android编程的工作。</p>
               <p>我对Android和Web开发充满热情。</p>
@@ -37,7 +37,7 @@ export function Home({
             </p>
           </div>
         </div>
-        <div className="hidden pl-4 pt-8 xl:block">
+        <div className="hidden pt-8 pl-4 xl:block">
           <ProfileCard />
         </div>
       </div>

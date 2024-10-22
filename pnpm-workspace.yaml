@@ -1,4 +1,7 @@
 onlyBuiltDependencies:
+  - '@biomejs/biome'
+  - '@tailwindcss/oxide'
+  - '@vercel/speed-insights'
   - contentlayer2
   - esbuild
   - protobufjs

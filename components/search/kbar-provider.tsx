@@ -3,7 +3,7 @@
 import type { Action } from 'kbar'
 import { KBarProvider } from 'kbar'
 import { useRouter } from 'next/navigation.js'
-import { useEffect, useState, type ReactNode } from 'react'
+import { type ReactNode, useEffect, useState } from 'react'
 import type { CoreContent, MDXDocument } from '~/types/data'
 import { formatDate } from '~/utils/misc'
 import { KBarModal } from './kbar-modal'
@@ -11,7 +11,7 @@ import { KBarModal } from './kbar-modal'
 export interface KBarSearchProps {
   searchDocumentsPath: string | false
   defaultActions?: Action[]
-  onSearchDocumentsLoad?: (json: any) => Action[]
+  onSearchDocumentsLoad?: (json: unknown) => Action[]
 }
 
 export interface KBarConfig {
@@ -31,6 +31,7 @@ export function KBarSearchProvider({
   let [searchActions, setSearchActions] = useState<Action[]>([])
   let [dataLoaded, setDataLoaded] = useState(false)
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     function mapPosts(posts: CoreContent<MDXDocument>[]) {
       let actions: Action[] = []
@@ -41,7 +42,7 @@ export function KBarSearchProvider({
           keywords: post?.summary || '',
           section: 'Content',
           subtitle: formatDate(post.date),
-          perform: () => router.push('/' + post.path),
+          perform: () => router.push(`/${post.path}`),
         })
       }
       return actions

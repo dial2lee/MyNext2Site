@@ -25,11 +25,8 @@ function is(interval: number, cycle: number) {
 }
 
 export function getTimeAgo(time: string | number | Date, now = Date.now()): string {
-  if (typeof time === 'string' || time instanceof Date) {
-    time = new Date(time).getTime()
-  }
-
-  let secs = (now - time) / 1000
+  let timeStamp = typeof time === 'number' ? time : new Date(time).getTime()
+  let secs = (now - timeStamp) / 1000
   let mins = is(60, secs)
   let hours = is(60, mins)
   let days = is(24, hours)
@@ -74,7 +71,7 @@ export function getTimeAgo(time: string | number | Date, now = Date.now()): stri
 /**
  * Sorts a list of MDX documents by date in descending order
  */
-export function sortPosts<T extends MDXDocumentDate>(allBlogs: T[], dateKey: string = 'date'): T[] {
+export function sortPosts<T extends MDXDocumentDate>(allBlogs: T[], dateKey = 'date'): T[] {
   return allBlogs.sort((a, b) => dateSortDesc(a[dateKey], b[dateKey]))
 }
 

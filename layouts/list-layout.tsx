@@ -31,7 +31,7 @@ function Pagination({ totalPages, currentPage }: PaginationProps) {
   let nextPage = currentPage + 1 <= totalPages
 
   return (
-    <div className="space-y-2 pb-8 pt-6 md:space-y-5">
+    <div className="space-y-2 pt-6 pb-8 md:space-y-5">
       <nav className="flex justify-between">
         {prevPage ? (
           <Link
@@ -45,7 +45,7 @@ function Pagination({ totalPages, currentPage }: PaginationProps) {
             </GrowingUnderline>
           </Link>
         ) : (
-          <button className="cursor-auto disabled:opacity-50" disabled={!prevPage}>
+          <button type="button" className="cursor-auto disabled:opacity-50" disabled={!prevPage}>
             <GrowingUnderline className="inline-flex items-center gap-2">
               <ArrowLeft className="h-4 w-4" />
               <span>上一页</span>
@@ -63,7 +63,7 @@ function Pagination({ totalPages, currentPage }: PaginationProps) {
             </GrowingUnderline>
           </Link>
         ) : (
-          <button className="cursor-auto disabled:opacity-50" disabled={!nextPage}>
+          <button type="button" className="cursor-auto disabled:opacity-50" disabled={!nextPage}>
             <GrowingUnderline className="inline-flex items-center gap-2">
               <span>下一页</span>
               <ArrowRight className="h-4 w-4" />
@@ -103,7 +103,7 @@ export function ListLayout({
       {!filteredBlogPosts.length ? (
         <div className="py-10">还没有发布文章哦</div>
       ) : (
-        <div className="space-y-12 divide-gray-200 pt-6 dark:divide-gray-700 md:space-y-20 md:pt-10">
+        <div className="space-y-12 divide-gray-200 pt-6 md:space-y-20 md:pt-10 dark:divide-gray-700">
           {displayPosts.map((post) => (
             <PostCardListView key={post.path} post={post} />
           ))}
