@@ -1,17 +1,18 @@
-import { integer, pgEnum, pgTable, primaryKey, varchar } from 'drizzle-orm/pg-core'
+import { int, mysqlEnum, mysqlTable, primaryKey, varchar } from 'drizzle-orm/mysql-core'
 
-export let typeEnum = pgEnum('type', ['blog', 'snippet'])
+const typeEnumValues = ['blog', 'snippet'] as const
+export let typeEnum = mysqlEnum('type', typeEnumValues)
 
-export let statsTable = pgTable(
+export let statsTable = mysqlTable(
   'stats',
   {
-    type: typeEnum().notNull(),
+    type: typeEnum.notNull(),
     slug: varchar('slug', { length: 255 }).notNull(),
-    views: integer('views').notNull().default(0),
-    loves: integer('loves').notNull().default(0),
-    applauses: integer('applauses').notNull().default(0),
-    ideas: integer('ideas').notNull().default(0),
-    bullseyes: integer('bullseyes').notNull().default(0),
+    views: int('views').notNull().default(0),
+    loves: int('loves').notNull().default(0),
+    applauses: int('applauses').notNull().default(0),
+    ideas: int('ideas').notNull().default(0),
+    bullseyes: int('bullseyes').notNull().default(0),
   },
   ({ type, slug }) => {
     return {
@@ -20,5 +21,5 @@ export let statsTable = pgTable(
   }
 )
 
-export type StatsType = (typeof typeEnum.enumValues)[number]
+export type StatsType = (typeof typeEnumValues)[number]
 export type SelectStats = typeof statsTable.$inferSelect

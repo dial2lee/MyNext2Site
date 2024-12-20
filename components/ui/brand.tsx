@@ -44,6 +44,7 @@ import Env from '~/icons/env.svg'
 import Html from '~/icons/html5.svg'
 import Postcss from '~/icons/postcss.svg'
 import Commitlint from '~/icons/commitlint.svg'
+import Android from '~/icons/android.svg'
 
 export let BrandsMap: Record<
   string,
@@ -247,6 +248,10 @@ export let BrandsMap: Record<
     Icon: Pnpm,
     url: 'https://pnpm.io/',
   },
+  Android: {
+    Icon: Android,
+    url: 'https://developer.android.google.cn/?hl=zh-cn',
+  },
 }
 
 export function Brand(props: {
@@ -265,7 +270,7 @@ export function Brand(props: {
   }
 
   return (
-    <Link href={`${url}?ref=leohuynh.dev`} className={className}>
+    <Link href={`${url}?ref=diallee.com`} className={className}>
       <Icon className={iconClassName} fill="currentColor" />
     </Link>
   )

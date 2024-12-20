@@ -29,7 +29,7 @@ export function BlogMeta({ date, lastmod, type, slug, readingTime }: BlogMetaPro
           )}
         </time>
         <span className="text-gray-300 dark:text-gray-700">/</span>
-        <span>{Math.ceil(readingTime.minutes)} mins read</span>
+        <span>{Math.ceil(readingTime.minutes)} 分钟读</span>
         <span className="text-gray-300 dark:text-gray-700">/</span>
         <ViewsCounter type={type} slug={slug} />
       </dd>

@@ -1,0 +1,302 @@
+---
+title: '鸿蒙系统音频开发'
+date: '2024-09-18 13:43'
+tags: ['harmonyos', 'audio']
+draft: false
+summary: '鸿蒙系统音频开发涉及录音、权限管理和用户文件管理等能力，提供两种音频录制方式：AudioCapturer和AVRecorder。'
+authors: ['default']
+---
+
+## 牵扯的能力
+
+1. 录音
+2. 权限声明、申请
+3. 用户文件管理
+
+## 音频录制方式
+
+| 方式名        | 所在服务 | 说明                                     | Android对应   |
+| ------------- | -------- | ---------------------------------------- | ------------- |
+| AudioCapturer | 音频服务 | 直接返回音频数据，仅支持PCM格式          | AudioRecord   |
+| AVRecorder    | 媒体服务 | 保存到文件，集成了录音、编码、压缩等功能 | MediaRecorder |
+
+> PCM全称Pulse-Code Modulation，翻译为脉冲调制编码，是一种用数字表示模拟信号的方法
+
+## 开发步骤
+
+代码实现基于鸿蒙API 9 Release，其他版本可能存在接口差异。需要对录制的音频进行实时处理的（比如语音交互）需要采用AudioCapturer来实现音频录制，这里也介绍一下此种方式的实现。
+
+### 权限的声明和申请
+
+应用需要调用麦克风来录制音频，该行为属于隐私敏感行为，需要在调用麦克风前申请权限
+
+1. 申明麦克风使用权限
+
+   在module.json5配置文件的requestPermissions标签中声明权限
+
+   ```
+   {
+     "module": {
+       "name": "entry",
+       "type": "entry",
+       "description": "$string:module_desc",
+       "mainElement": "EntryAbility",
+       ......
+       "abilities": [
+         {
+           "name": "EntryAbility",
+           "srcEntry": "./ets/entryability/EntryAbility.ts",
+           ......
+         }
+       ],
+       "requestPermissions": [
+         {
+           "name": "ohos.permission.MICROPHONE",
+           "reason": "$string:permission_microphone_reason",
+           "usedScene": {
+             "when": "always"
+           }
+         }
+       ]
+     }
+   }
+   ```
+
+   其中name字段的ohos.permission.MICROPHONE为麦克风使用权限名，reason字段标明申请权限的原因，usedScene标明权限使用的场景
+
+2. 向用户申请麦克风使用权限
+
+   首先校验当前是否已经授权，如果已经授权可直接发起录音
+
+   ```
+   // 申明需要申请的权限，这里只需麦克风权限
+   const PERMISSIONS: Array<Permissions> = ['ohos.permission.MICROPHONE']
+
+   // 检查麦克风权限是否授权
+   private async checkMicRophonePermission(): Promise<boolean> {
+     let grantStatus: abilityAccessCtrl.GrantStatus = await this.checkPermissionGrant(PERMISSIONS[0])
+     if (grantStatus === abilityAccessCtrl.GrantStatus.PERMISSION_GRANTED) {
+       return true
+     } else {
+       return false
+     }
+   }
+
+   // 检查参数中的权限是否授权
+   private async checkPermissionGrant(permission: Permissions): Promise<abilityAccessCtrl.GrantStatus> {
+     let atManager: abilityAccessCtrl.AtManager = abilityAccessCtrl.createAtManager();
+     let grantStatus: abilityAccessCtrl.GrantStatus = abilityAccessCtrl.GrantStatus.PERMISSION_DENIED
+
+     // 获取应用程序accessTokenID
+     let tokenId: number = 0
+     try {
+       let bundleInfo: bundleManager.BundleInfo = await bundleManager.getBundleInfoForSelf(bundleManager.BundleFlag.GET_BUNDLE_INFO_WITH_APPLICATION)
+       let appInfo: bundleManager.ApplicationInfo = bundleInfo.appInfo
+       tokenId = appInfo.accessTokenId
+     } catch (error) {
+       // const err = error as BusinessError
+       Logger.error(TAG, `Fialed to get bundle info for self. COde is ${error.code}, message is ${error.message}`)
+     }
+
+     // 校验应用是否被授权
+     try {
+       grantStatus = await atManager.checkAccessToken(tokenId, permission)
+     } catch (error) {
+       Logger.error(TAG, `Failed to check access token, COde is ${error.code}}, messsage is ${error.message}}`)
+     }
+     return grantStatus
+   }
+   ```
+
+   如果判断未被授权需要主动向用户申请权限，在用户授权后发起录音功能
+
+   ```
+   private reqPermissionsFromUser() {
+     let context = getContext(this) as common.UIAbilityContext;
+     let atManager: abilityAccessCtrl.AtManager = abilityAccessCtrl.createAtManager()
+     try {
+       atManager.requestPermissionsFromUser(context, PERMISSIONS).then((data) => {
+         let grantStatus: Array<number> = data.authResults
+         let length: number = grantStatus.length
+         for (let i = 0; i < length; i++) {
+           if (grantStatus[i] === 0) {
+             promptAction.showToast({ message: '授予录音权限成功' })
+             // 发起录音
+             this.startAudio()
+           } else {
+             promptAction.showToast({ message: '授予录音权限失败' })
+             return;
+           }
+         }
+       })
+     } catch (error) {
+       // const err = error as BusinessError
+       Logger.error(TAG, `Failed to request permissions from user. Code is ${error.code}, message is ${error.message}`);
+     }
+   }
+   ```
+
+### 保存文件的获取
+
+这里录音的实现是将实时录制的音频保存到文件中，如果采用“应用文件”的方式保存可直接采用如下的方式获取文件
+
+```
+ // 获取应用文件路径
+ let context = getContext(this) as common.UIAbilityContext
+ let path = context.cacheDir;
+ // 新建并打开文件
+ let filePath = path + '/temp.pcm';
+ let file: fs.File = fs.openSync(filePath, fs.OpenMode.READ_WRITE | fs.OpenMode.CREATE);
+```
+
+如需要保存为“用户文件”，可通过拉起“文件选择器应用”选择目录来实现。
+
+```
+private async createAudioFile(): Promise<string> {
+	// 创建音频保存选项实例
+  const audioSaveOptions = new picker.AudioSaveOptions();
+  // 设定保存文件名
+  audioSaveOptions.newFileNames = ['test.pcm'];
+  // 采用音频选择器
+  const audioViewPicker = new picker.AudioViewPicker();
+  // 发起目标文件夹选择并获取文件的uri
+  let uris = await audioViewPicker.save(audioSaveOptions)
+  if (uris !== undefined && uris.length > 0) {
+    Logger.info(TAG, 'audioViewPicker.save to file succeed and uri is:' + uris[0]);
+    return uris[0]
+  } else {
+    return ''
+  }
+}
+```
+
+### 音频的录制
+
+下图展示了AudioCapturer的状态变化，在创建实例后，调用对应的方法可以进入指定的状态实现对应的行为
+
+![状态流程图](/static/images/harmonyos-audio-recorder/audio_recorder_state_flow.png)
+
+1. 配置音频采集参数
+
+   ```
+   let audioSteamInfo: audio.AudioStreamInfo = {
+     samplingRate: audio.AudioSamplingRate.SAMPLE_RATE_16000, // 采样率
+     channels: audio.AudioChannel.CHANNEL_1, // 通道
+     sampleFormat: audio.AudioSampleFormat.SAMPLE_FORMAT_S16LE, // 采样格式
+     encodingType: audio.AudioEncodingType.ENCODING_TYPE_RAW // 编码格式
+   }
+
+   let audioCaptureInfo: audio.AudioCapturerInfo = {
+     source: audio.SourceType.SOURCE_TYPE_MIC, // 音源类型
+     capturerFlags: 0 // 音频采集器标志，0代表普通音频采集器
+   }
+
+   let audioCaptureOptions: audio.AudioCapturerOptions = {
+     streamInfo: audioSteamInfo,
+     capturerInfo: audioCaptureInfo
+   }
+   ```
+
+2. 创建AudioCapturer实例
+
+   ```
+   try {
+     this.audioCapturer = await audio.createAudioCapturer(audioCaptureOptions)
+     Logger.info(TAG, 'Invoke createAudioCapturer succeeded.')
+     if (this.audioCapturer !== undefined) {
+   	  // 创建成功可以监听音频状态变更
+       this.audioCapturer.on('stateChange', (state: audio.AudioState) => {
+         Logger.info(TAG, `current state is ${state}`);
+       })
+     }
+   } catch (err) {
+     Logger.error(TAG, `Invoke createAudioCapturer failed, code is ${err.code}, message is ${err.message}`)
+   }
+   ```
+
+3. 调用start()方法进入running状态，开始录制音频
+
+   ```
+   if (this.audioCapturer !== undefined) {
+     let stateGroup = [audio.AudioState.STATE_PREPARED, audio.AudioState.STATE_PAUSED, audio.AudioState.STATE_STOPPED];
+     if (stateGroup.indexOf(this.audioCapturer.state.valueOf()) === -1) {
+       Logger.error(TAG, `start failed`);
+       return;
+     }
+     this.audioCapturer.start((err: Error) => {
+       if (err) {
+         Logger.error(TAG, `Capturer start failed, code is ${err.name}, message is ${err.message}`);
+       } else {
+         Logger.info(TAG, 'Capturer start success.');
+         // 保存录音的音频到文件
+         this.startSaveAudio()
+       }
+     })
+   }
+   ```
+
+4. 在录音状态循环读取数据并保存到文件中，直接录制结束
+
+   ```
+   class Options {
+     offset?: number;
+     length?: number;
+   }
+
+   // 获取用于保存录音的合理最小缓冲区大小
+   let bufferSize = await this.audioCapturer.getBufferSize()
+
+   while (this.audioCapturer.state.valueOf() === audio.AudioState.STATE_RUNNING) {
+     try {
+       let buffer = await this.audioCapturer.read(bufferSize, true)
+       if (buffer !== undefined) {
+         Logger.info(TAG, 'buffer read successfully');
+         let options: Options = {
+           offset: this.audioSize,
+           length: buffer.byteLength
+         }
+         fs.writeSync(this.audioFile.fd, buffer, options);
+         this.audioSize += buffer.byteLength;
+       }
+     } catch (err) {
+       Logger.info(TAG, `save audio file error ${err}`);
+     }
+   }
+   // 录制完成关闭文件
+   fs.close(this.audioFile);
+   ```
+
+5. 停止录制
+
+   ```
+   if (this.audioCapturer !== undefined) {
+     // 只有采集器状态为STATE_RUNNING或STATE_PAUSED的时候才可以停止
+     if (this.audioCapturer.state.valueOf() !== audio.AudioState.STATE_RUNNING && this.audioCapturer.state.valueOf() !== audio.AudioState.STATE_PAUSED) {
+       Logger.info(TAG, 'Capturer is not running or paused');
+       return
+     }
+     this.audioCapturer.stop()
+   }
+   ```
+
+6. 销毁实例，释放资源
+
+   ```
+   if (this.audioCapturer !== undefined) {
+     // 采集器状态不是STATE_RELEASED或STATE_NEW状态，才能release
+     if (this.audioCapturer.state.valueOf() === audio.AudioState.STATE_RELEASED || this.audioCapturer.state.valueOf() === audio.AudioState.STATE_NEW) {
+       Logger.info(TAG, 'Capturer already released');
+       return;
+     }
+     this.audioCapturer.release((err: Error) => {
+       if (err) {
+         Logger.error(TAG, 'Capturer release failed.');
+       } else {
+         Logger.info(TAG, 'Capturer release success.');
+         this.audioCapturer = undefined;
+       }
+     });
+   }
+   ```
+
+从总体来看鸿蒙录音接口基本上参照的Android定义，在细节上有部分优化（比如获取最小缓冲区大小方式），基于**JavaScript** 的语言特性不用启动单独的线程使用Promise异步调用即可获取保存录音数据。

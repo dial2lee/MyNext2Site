@@ -1,0 +1,104 @@
+---
+title: 'Android系统字体大小适配'
+date: '2024-05-09 16:57'
+tags: ['android', 'font']
+draft: false
+summary: '在Android系统设置中可以更改系统字体的大小，这个设置是如何影响到应用的字体的呢？'
+authors: ['default']
+---
+
+### 系统字体大小缩放设置
+
+![Android系统字体大小设置](/static/images/android-font-size-settting.png)
+
+一般在 `系统设置-显示设置` 中有 `字体大小` 设置选项，缩放基本有小、默认、大和最大，此设置为系统级字体缩放设置，修改会直接影响到现有应用的字体显示大小。
+
+### **TextView.setTextSize() 接口说明**
+
+```java
+public void setTextSize(float size) {
+    setTextSize(TypedValue.COMPLEX_UNIT_SP, size);
+}
+
+public void setTextSize(int unit, float size) {
+    Context c = getContext();
+    Resources r;
+    if (c == null)
+        r = Resources.getSystem();
+    else
+        r = c.getResources();
+    setRawTextSize(TypedValue.applyDimension(unit, size, r.getDisplayMetrics()));
+}
+
+private void setRawTextSize(float size) {
+    if (size != mTextPaint.getTextSize()) {
+        mTextPaint.setTextSize(size);
+        if (mLayout != null) {
+            nullLayouts();
+            requestLayout();
+            invalidate();
+        }
+    }
+}
+```
+
+setTextSize(float size)最终调用的是setTextSize(int unit,float size)方法，只是设置了一个默认参数TypedValue.COMPLEX_UNIT_SP，也就是调用setTextSize(float size)方法会默认转换为sp单位。在实际设置字体大小之前通过方法 `TypedValue.applyDimension` 进行字体单位换算转化为像素大小。
+
+### **TypedValue.applyDimension() 结果说明**
+
+```java
+ public static float applyDimension(int unit, float value, DisplayMetrics metrics) {
+    switch (unit) {
+    case COMPLEX_UNIT_PX:
+        return value;
+    case COMPLEX_UNIT_DIP:
+        return value * metrics.density;
+    case COMPLEX_UNIT_SP:
+        return value * metrics.scaledDensity;
+    case COMPLEX_UNIT_PT:
+        return value * metrics.xdpi * (1.0f/72);
+    case COMPLEX_UNIT_IN:
+        return value * metrics.xdpi;
+    case COMPLEX_UNIT_MM:
+        return value * metrics.xdpi * (1.0f/25.4f);
+    }
+    return 0;
+}
+```
+
+根据传递过来的unit，来分别计算出不同单位对应的像素值是多少，可以看到sp和dp的区别就是density和scaledDensity的区别。
+
+> dp是一种密度无关像素，对应于 160dpi 下像素的物理尺寸
+
+> sp是和dp相同的基本单位，但它会按用户首选的文本尺寸进行缩放（属于缩放无关像素）
+
+其中scaledDensity = density \* fontScale。fontScale代表用户设定的Android设备字体缩放比例，默认为1.0。也就是说，当用户没有改变Android设备的字体缩放比例时，sp、dp的换算是相同的。
+
+### DisplayMetrics 获取方式
+
+```java
+//Display屏幕显示的详细信息
+Display display = getWindowManager().getDefaultDisplay();
+//从Display获取DisplayMetrics信息
+DisplayMetrics metrics = new DisplayMetrics();
+display.getMetrics(metrics);
+//上面获取的DisplayMetrics只可读，
+//第二种获取DisplayMetrics的方式,可修改里面的参数
+context.getResources().getDisplayMetrics()
+```
+
+相关的属性：
+
+widthPixels：宽度显示的数值是1080，就是说屏幕的宽度是1080px
+heightPixels：高度
+densityDpi：屏幕像素密度（单位英寸下可以容纳多少个像素点）
+density：密度比值（密度/标准密度，即480/160=3）
+scaledDensity：同density，用于文字缩放的计算也就是 sp
+
+### 字体大小变更
+
+默认情况下系统字体大小变更应用的Activity会重建以使用对应缩放后的字体大小，当然也可以通过配置Activity的属性 `android:configChanges="fontScale"` 设定变更不重建Activity，这样已经显示的文本不会有对应的缩放变化但会接收到 `onConfigurationChanged` 回调，此时可以根据自己的情况进行设定。
+
+### 总结
+
+如果需要跟随系统设置的字体大小变化需要设置字体大小的单位必须是sp

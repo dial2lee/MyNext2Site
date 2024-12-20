@@ -15,17 +15,17 @@ import { Fragment, useEffect, useState } from 'react'
 
 const THEMES = [
   {
-    label: 'Light',
+    label: '浅色',
     value: 'light',
     icon: Sun,
   },
   {
-    label: 'Dark',
+    label: '深色',
     value: 'dark',
     icon: MoonStar,
   },
   {
-    label: 'System',
+    label: '系统',
     value: 'system',
     icon: Monitor,
   },

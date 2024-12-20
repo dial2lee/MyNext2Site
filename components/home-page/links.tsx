@@ -1,38 +1,26 @@
 import { Link } from '~/components/ui/link'
 import { Twemoji } from '~/components/ui/twemoji'
 import { GrowingUnderline } from '~/components/ui/growing-underline'
-import { SITE_METADATA } from '~/data/site-metadata'
+// import { SITE_METADATA } from '~/data/site-metadata'
 
 const LINKS = [
   {
-    title: `What have I built?`,
-    href: `/projects`,
-    emoji: 'man-technologist',
-    event: 'home-link-projects',
-  },
-  {
-    title: `My writings`,
+    title: `我的文章`,
     href: `/blog`,
     emoji: 'memo',
     event: 'home-link-blog',
   },
   {
-    title: `Snippets collection`,
+    title: `零散的代码片段或者知识点`,
     href: `/snippets`,
     emoji: 'dna',
     event: 'home-link-snippets',
   },
   {
-    title: `About me & this blog`,
+    title: `关于我的更多信息`,
     href: `/about`,
     emoji: 'smiling-face-with-sunglasses',
     event: 'home-link-about',
-  },
-  {
-    title: `Traffic and insights`,
-    href: SITE_METADATA.analytics.umamiAnalytics.shareUrl,
-    emoji: 'bar-chart',
-    event: 'home-link-analytics',
   },
 ]
 

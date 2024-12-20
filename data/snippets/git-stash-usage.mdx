@@ -1,0 +1,35 @@
+---
+heading: 'Git stash用法'
+title: 'Git stash相关命令的使用方法'
+date: '2018-08-09 10:01:16'
+icon: 'Git'
+draft: false
+summary: 'Git stash相关命令的使用方法'
+tags: ['git', 'stash']
+---
+
+> git stash 用于缓存当前修改，并且回到最后一次提交状态（切换到HEAD）的操作
+
+### 相关命令
+
+1. git stash 用于缓存当前修改，等同于git stash save
+2. git stash list 查看提交的记录
+3. git stash pop 恢复缓存堆栈中最新的一次提交
+4. git stash apply 恢复缓存中所有的提交
+5. git stash drop 后面可以跟着stash名字,移除缓存
+6. git stash clear 删除所有缓存
+7. git stash show 后面可以跟着stash名字显示diff，添加-p或--patch可以查看详细的diff
+
+### 暂存未跟踪或忽略的文件
+
+默认情况下，git stash会缓存下列文件
+
+- 添加到暂存区的修改（staged changes）
+- Git跟踪的但并未添加到暂存区的修改（unstaged changes）
+
+但不会缓存一下文件：
+
+- 在工作目录中新的文件（untracked files）
+- 被忽略的文件（ignored files）
+
+git stash命令提供了参数用于缓存上面两种类型的文件。使用-u或者--include-untracked可以stash untracked文件。使用-a或者--all命令可以stash当前目录下的所有修改

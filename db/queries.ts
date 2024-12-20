@@ -10,7 +10,7 @@ export async function getBlogStats(type: StatsType, slug: string) {
   if (stats.length) {
     return stats[0]
   }
-  let newStats = await db.insert(statsTable).values({ type, slug }).returning()
+  let newStats = await db.insert(statsTable).values({ type, slug })
   return newStats[0]
 }
 
@@ -32,6 +32,5 @@ export async function updateBlogStats(
     .update(statsTable)
     .set(updates)
     .where(and(eq(statsTable.type, type), eq(statsTable.slug, slug)))
-    .returning()
   return updatedStats[0]
 }

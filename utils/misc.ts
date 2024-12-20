@@ -1,7 +1,7 @@
 import type { MDXDocumentDate } from '~/types/data'
 
 export function formatDate(date: string) {
-  return new Date(date).toLocaleDateString('en-US', {
+  return new Date(date).toLocaleDateString('zh-CN', {
     year: 'numeric',
     month: 'short',
     day: '2-digit',

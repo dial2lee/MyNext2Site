@@ -1,9 +1,6 @@
 import { clsx } from 'clsx'
-import { AreaChart, Rss } from 'lucide-react'
 import { Link } from '~/components/ui/link'
-import { SpotifyNowPlaying } from '~/components/ui/now-playing'
-import { SITE_METADATA } from '~/data/site-metadata'
-import MadeInVietNam from '~/icons/miv.svg'
+import Image from 'next/image'
 
 export function FooterBottom() {
   return (
@@ -14,29 +11,21 @@ export function FooterBottom() {
         'border-t border-gray-200 dark:border-gray-700',
       ])}
     >
-      <SpotifyNowPlaying
-        className="w-full justify-center truncate [--artist-color:theme(colors.gray.500)] md:max-w-[50%] md:justify-start"
-        songEffect="underline"
-        showCover
-      />
-      <div className="flex items-center">
-        <Link href={SITE_METADATA.siteRepo}>
-          <span data-umami-event="made-in-vietnam">
-            <MadeInVietNam />
-          </span>
+      <div className="flex items-center"></div>
+      <div className="my-2 flex space-x-2 text-sm text-gray-500 dark:text-gray-400">
+        <Image
+          src={'/static/images/public_security_filing.png'}
+          alt={'公安备案图标'}
+          width={18}
+          height={18}
+        />{' '}
+        <Link href="https://beian.mps.gov.cn/#/query/webSearch?code=32011502011771">
+          苏公网安备32011502011771
         </Link>
-        {/* <span className="mx-2.5 text-gray-400">|</span>
-        <Link href="/feed.xml" aria-label="RSS Feed" data-umami-event="rss-feed" prefetch={false}>
-          <Rss strokeWidth={1.5} size={20} />
-        </Link>
-        <Link
-          href={SITE_METADATA.analytics.umamiAnalytics.shareUrl}
-          aria-label="Open analytics"
-          data-umami-event="footer-analytics"
-          className="ml-2"
-        >
-          <AreaChart strokeWidth={1.5} size={22} />
-        </Link> */}
+        <span>{` / `}</span>
+        <Link href="https://beian.miit.gov.cn">苏ICP备2024145282号</Link>
+        <span>{` / `}</span>
+        <div>{`Copyright © ${new Date().getFullYear()}`}</div>
       </div>
     </div>
   )

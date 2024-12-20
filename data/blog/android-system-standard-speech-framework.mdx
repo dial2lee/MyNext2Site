@@ -1,0 +1,115 @@
+---
+title: 'Android系统的标准语音套件'
+date: '2024-03-21 16:58:54'
+tags: ['android', 'voice']
+draft: false
+summary: 'Android 系统本身提供了一套语音相关的接口，包括语音播报、语音识别和语音交互，但只提供了中间逻辑层，服务端需要自己开发或者其他应用来提供'
+authors: ['default']
+---
+
+> 👉 Android 系统本身提供了一套语音相关的接口，包括语音播报、语音识别和语音交互，但只提供了中间逻辑层，服务端需要自己开发或者其他应用来提供
+
+## 使用系统能力弊端
+
+1. 很多场景不能播报或者需要停止播报，需要额外处理
+2. 没有优先级，存在资源竞争关系，比如识别
+3. 需要依赖系统的功能完善，比如语音按键、DSP等
+4. 接口或者功能不满足产品要求
+
+## 语音播报
+
+TTS是Text To Speech（文本转语音）的缩写，Android系统通过 TextToSpeech 机制，任意应用都可以方便地采用系统内置或第三方提供的 TTS Engine 进行播放铃声或者语音提示，Engine 可以由系统选择默认的 provider 来执行操作，也可由应用指定偏好的目标 Engine。
+
+默认 TTS Engine 可以在设备设置的路径中找到，亦可由用户手动更改：设置 _-> 辅助功能 -> 文本转语音 -> 首选引擎_
+
+Android系统的TextToSpeech 机制的优点有很多：
+
+- 对于需要使用 TTS 的请求 App 而言：无需关心 TTS 的具体实现，通过 TextToSpeech API 即用即有
+- 对于需要对外提供 TTS 能力的实现 Engine 而言，无需维护复杂的 TTS 时序和逻辑，按照 TextToSpeechService 框架的定义对接即可，无需关心系统如何将实现和请求进行衔接
+
+### 服务端
+
+只需实现TextToSpeechService服务接口并在AndroidManifest中配置服务特有的intent filter即可实现一个简单语音播报服务。
+
+除了需要实现一些语言相关的接口，最主要的是实现onStop停止播报或合成，实现onSynthesizeText将请求的文本逐步合成为音频通过回调返回给系统，并上报合成过程中的状态。
+
+```xml
+<intent-filter>
+    <action android:name="android.intent.action.TTS_SERVICE" />
+    <category android:name="android.intent.category.DEFAULT" />
+</intent-filter>
+```
+
+### 客户端
+
+TextToSpeech API 总体比较简单，最主要的是提供初始化 TTS 接口的 TextToSpeech() 构造函数和初始化后的回调 OnInitListener，后续的播放语音的speak()，播报的状态会通过注册的UtteranceProgressListener回调返回。
+
+需要注意的几点：
+
+1. 需要自行管理音频焦点
+2. 在页面或者服务销毁时及时调用shutdown() 释放连接、资源
+
+## 语音识别
+
+Android系统识别框架如同TTS一样也提供了客户端（SpeechRecognizer ）和服务器（RecognitionService ）接口，但SpeechRecognizer 没有像 Text-to-speech 一样在设置中提供独立的设置入口，其默认服务端由 VoiceInteraction 联动设置
+
+如下命令可以 dump 出系统默认的识别服务。
+
+```
+adb shell settings get secure voice_recognition_service
+```
+
+### 服务端
+
+通过继承 RecognitionService 实现最重要的几个抽象方法并在AndroidManifest中配置服务特有的intent filter即可提供语音识别服务
+
+1. 在 onStartListening() 里解析识别请求 Intent 中的参数，比如语言、最大结果数等信息传递给 识别引擎开始识别，并将识别过程中相应的状态、结果返回，比如开始说话 _beginningOfSpeech()_ 、结束说话 _endOfSpeech()_ 、中间结果 _partialResults()_ 等
+2. onStopListening() 里调用引擎的停止识别，一样的需要回传结果，比如最终识别结果 _results()_
+3. onCancel() 里执行引擎提供的 release() 进行识别引擎的解绑、资源释放
+
+```xml
+<intent-filter>
+    <action android:name="android.speech.RecognitionService" />
+    <category android:name="android.intent.category.DEFAULT" />
+</intent-filter>
+```
+
+### 客户端
+
+通过SpeechRecognizer.*isRecognitionAvailable可以检测识别服务是否可用，*调用静态方法 createSpeechRecognizer() 获取识别客户端，startListening发起识别，并可通过设置回调RecognitionListener监听识别的状态和识别的结果
+
+后续可以停止识别 stopListening()和取消服务 cancel()，唯一区别的地方在于 stop 只是暂时停止识别，识别 App 的连接还在，而 cancel 则是断开了连接、并重置了相关数据
+
+需要注意的几点：
+
+1. 需要申请系统录音权限
+2. 在页面或者服务销毁时及时释放连接、资源
+
+## 语音交互
+
+通过对接系统的Voice Interaction接口可以便捷地实现一些语音交互功能。比如在删除某项数据的时候，App 可以调度这些服务发起语音提示，并等待用户发出确认或取消的语音指令，其识别之后自动将结果返回回来，App 接棒完成后续的处理。
+
+### 服务端
+
+VIA 的核心服务 `VoiceInteractionService` 依赖 SystemService 的调度，该服务名为 `VoiceInteractionManagerService`。
+
+在 VIA 设置为默认数字助手应用之后，VoiceInteractionManagerService 会绑定 VIA 的 VoiceInteractionService 并进行 ASR、NLU、NLG、TTS 等服务的初始化，同时开启对 Hotword 的探测。
+
+当 客户端应用通过 VI 发出 Request 后，VoiceInteractionManagerService 会绑定 `VoiceInteractinoSessionService` 并开启一个 `VoiceInteractionSession` 进行处理。
+
+该 Session 收到具体的的 Request，在展示 UI 的同时会依据传入的 Prompt 文本调用 TTS 进行朗读。之后调用 `MediaRecorder` 进行录音，并将数据交由 ASR 和 NLU 进入语音识别和语义分析。
+
+当识别到的结果和目标意图符合或模糊匹配上的话，将会回调 Request 的相应 Callback。
+
+### 客户端
+
+这里已确认请求为例：
+
+1. Android 的 Activity 组件提供了发起和停止 VI 调用的方法：startLocalVoiceInteraction() 和 stopLocalVoiceInteraction()。调用被发起后 Activity 的 onLocalVoiceInteractionStarted() 会被回调，在这里 App 可以获取到向 VIA 请求的入口即 VoiceInteractor。
+2. 接着可以创建 Request 实例，并使用得到的 VoiceInteractor 向系统发出去。
+3. 系统收到 Request 后会按照提示调用 TTS 进行朗读，并等待用户的后续语音指令，当用户发出不同指令或指令超时的时候，Request 的相应回调将被系统触发。
+
+需要注意的几点：
+
+1. 确保麦克风打开
+2. 确保设备中存在 VIA 并且设置为默认的数字助手应用（设置-应用和通知-默认应用-数字助手应用）

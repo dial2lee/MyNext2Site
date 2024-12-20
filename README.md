@@ -1,53 +1,38 @@
-<h1 align="center">leohuynh.dev 🧑‍💻</h1>
+<h1 align="center">我的编码生活</h1>
+<p align="center"><i>提升我的技能，分享我学到的知识和激发我更加奋进。</i></p>
 
-<div align="center">
+<p align="center"><i>喜欢这个项目吗？请访问我的<a href="https://www.diallee.com">个人网站</a></i></p>
+<br>
 
-[![Made in Vietnam](https://raw.githubusercontent.com/webuild-community/badge/master/svg/made-modern.svg)](https://leohuynh.dev)
+此博客托管在 [Vercel](https://vercel.com/)上， 基于 **Tailwind Nextjs Starter Blog**使用 [Next.js](https://nextjs.org/) 和 [Tailwind CSS](https://tailwindcss.com/) 创建。
 
-</div>
+[![Next][Next.js]][Next-url] [![MDX][MDX]][MDX-url] [![Vercel][Vercel]][Vercel-url] [![React][React]][React-url] [![Typescript][Typescript]][Typescript-url] [![Tailwind CSS][Tailwind CSS]][Tailwind CSS-url]
 
-![leohuynh.dev @ #250a4c5 on Oct.13](https://cdn.shopify.com/s/files/1/0669/0262/2504/files/pawelzmarlak-2024-10-12T14_51_02.315Z.png?v=1728744886)
+</br>
 
-## Motivation
+这个博客网站的灵感来源于[lehuynh.dev](https://github.com/hta218/leohuynh.dev)和[karhdo.dev](https://github.com/Karhdo/karhdo.dev)。我很感激 [Leo Huynh](https://twitter.com/hta218_) 和 [Timothy Lin](https://twitter.com/timlrxx) 对这个小巧、轻量和高度可定制的博客的贡献。
 
-> Sharing is learning!
+## 部署发布说明
 
-I started this blog as a way to document and share stuff I have learned and found useful as a software engineer.
+### 数据库
 
-Building and writing things down is a great way for me to solidify my understanding of new concepts and ideas. I hope my blog could be a helpful resource for fellow devs who interested in web dev, eCommerce, and related technologies.
+目前使用的是阿里云对外提供服务，项目部署在个人Nas存储上，在Nas容器上部署了MySql数据库。文章的阅读、点赞等统计采用的是drizzle的方式连接数据库上报和获取统计数据。
+drizzle.config.ts文件和db目录是数据库配置、数据表、以及数据接口定义等，数据库连接配置采用环境变量获取，可以在环境变量配置文件中设置好数据库连接信息（DATABASE_URL）。
+如果需要新建表或者修改表结构需要修改配置文件并执行**yarn db:init**同步修改服务端数据库,**yarn db:studio**可以启动服务浏览器查看表结构
 
-I would be highly appreciated if you could leave your comments and thoughts on what I have written 🍻
+<p align="center"><b>Copyright © 2024 - diallee</b></p>
 
-## Tech stack
+<!-- MARKDOWN LINKS & IMAGES -->
 
-This blog is hosted on [Vercel](https://vercel.com/), built with [Next.js](https://nextjs.org/) and [Tailwind CSS](https://tailwindcss.com/) using **Tailwind Nextjs Starter Blog**.
-
-A huge thanks to [Timothy Lin](https://twitter.com/timlrxx) for the minimal, lightweight, and super easy-to-customize blog starter.
-
-A few major over-engineering-changes from the original repo:
-
-- ⚛️ **React 18+**, **NextJS 14+** (App Router)
-- 🎉 Adopting **Typescript**, committing with [Conventional Commits](https://www.conventionalcommits.org/)
-- 📊 Monitoring site with [Umami](https://umami.is/) website analytics
-- 👀 Theming in dark mode with [Github dark dimmed](https://github.blog/changelog/2021-04-14-dark-and-dimmed-themes-are-now-generally-available/) colors for better contrast
-- 👨‍💻 Making a lot of changes to the UI, new homepage design, adding `ProfileCard`, `CareerTimeline` components, adding `/snippets`, `/books` page, etc.
-
-## Assets
-
-The images in this blog are from [Unsplash](https://unsplash.com/), gifs from [GIPHY](https://giphy.com/), and illustrations are from [Storyset](https://storyset.com/).
-
-Thanks for the free resources 🙏
-
-## Star History
-
-<a href="https://star-history.com/#hta218/leohuynh.dev&Date">
- <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=hta218/leohuynh.dev&type=Date&theme=dark" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=hta218/leohuynh.dev&type=Date" />
-   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=hta218/leohuynh.dev&type=Date" />
- </picture>
-</a>
-
----
-
-Copyright (c) 2024 - Leo's dev blog – stories, insights, and ideas.
+[Next.js]: https://img.shields.io/badge/next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white
+[Next-url]: https://nextjs.org/
+[Typescript]: https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white
+[Typescript-url]: https://www.typescriptlang.org/
+[Tailwind CSS]: https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white
+[Tailwind CSS-url]: https://tailwindcss.com/
+[MDX]: https://img.shields.io/badge/MDX-000000?style=for-the-badge&logo=mdx&logoColor=white
+[MDX-url]: https://mdxjs.com/
+[React]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
+[React-url]: https://reactjs.org/
+[Vercel]: https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white
+[Vercel-url]: https://vercel.com/
