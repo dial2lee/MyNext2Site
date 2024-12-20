@@ -1,0 +1,62 @@
+---
+title: 'Next.js项目容器化部署'
+date: '2024-11-27 16:29'
+tags: ['docker', 'nextjs']
+draft: false
+summary: 'Next.js 支持部署到任何支持 Docker 容器的托管提供商。这里介绍如何在已有的Next.js项目中增加对Docker的支持。'
+authors: ['default']
+---
+
+Next.js 支持部署到任何支持 Docker 容器的托管提供商。这里介绍如何在已有的Next.js项目中增加对Docker的支持。
+
+### 配置项目
+
+拷贝或者下载Next.js官方的 [`Dockerfile`](https://github.com/vercel/next.js/blob/canary/examples/with-docker/Dockerfile) 文件到项目根目录，并且在 `next.config.js` 中增加如下额外的配置（这将把项目构建为Docker镜像中的独立应用程序）
+
+```
+// next.config.js
+module.exports = {
+  // ... rest of the configuration.
+  output: "standalone",
+};
+```
+
+### 安装并运行Docker
+
+在你自己机器上[安装 Docker](https://docs.docker.com/get-docker/)软件并打开运行
+
+### 构建运行项目镜像
+
+1. 基于项目Dockerfile构建镜像，执行后镜像将可以在Docker中查看到（也可执行命令 docker images 查看）
+
+   ```docker
+   docker build -f .\Dockerfile.txt -t 生成的镜像名 .
+   ```
+
+2. 运行镜像（生成容器并运行），执行后可以在Docker中查看到容器已经运行中（也可执行命令 docker ps -a 查看）
+
+   ```docker
+   docker run -p 3000:3000 mynextsite
+   ```
+
+### 修改镜像内容
+
+如果需要修改镜像的内容，可以通过Docker桌面端直接修改容器的文件内容
+
+![桌面端修改docker镜像文件](/static/images/modify-docker-image.png)
+
+也可以通过命令行docker指令进入容器修改，进入容器的shell环境，自行修改容器内容
+
+```docker
+docker exec -it 容器id /bin/sh
+```
+
+修改后提交修改生成新的镜像
+
+```docker
+docker commit 容器id 新的镜像名
+```
+
+### 将镜像导出
+
+如果需要可以将新生成的镜像导出，可以迁移到其他Docker中导入运行

@@ -93,7 +93,7 @@ export function MobileNav() {
                     className="hover:text-primary-500 dark:hover:text-primary-400 py-1 text-xl font-bold tracking-widest text-gray-900 outline-0 outline-solid dark:text-gray-100"
                     onClick={onToggleNav}
                   >
-                    <Twemoji emoji={link.emoji} />
+                    {link.emoji ? <Twemoji emoji={link.emoji} /> : null}
                     <span className="ml-2">{link.title}</span>
                   </Link>
                 ))}

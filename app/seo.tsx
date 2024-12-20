@@ -23,7 +23,7 @@ export function genPageMetadata({
       url: './',
       siteName: SITE_METADATA.title,
       images: image ? [image] : [SITE_METADATA.socialBanner],
-      locale: 'en_US',
+      locale: 'zh-CN',
       type: 'website',
     },
     twitter: {

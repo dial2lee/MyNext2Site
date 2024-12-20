@@ -23,7 +23,7 @@ export function TableOfContents({
           size={20}
           className="chevron-right rotate-0 transition-transform"
         />
-        <span className="text-lg font-medium">On this page</span>
+        <span className="text-lg font-medium">目录导航</span>
       </summary>
       <ul className="flex flex-col space-y-2">
         {toc.map(({ value, depth, url }) => (

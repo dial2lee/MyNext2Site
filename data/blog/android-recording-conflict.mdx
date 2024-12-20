@@ -1,0 +1,45 @@
+---
+title: 'Android录音冲突'
+date: '2020-10-13 14:16:15'
+tags: ['android', '开发']
+draft: false
+summary: '在使用Android的录音功能时会遇到和其他录音应用冲突的问题，此文介绍了录音状态的获取和判断方法'
+authors: ['default']
+---
+
+> 在使用Android的录音功能时会遇到和其他录音应用冲突的问题，比如其他应用录音时启动自己的录音功能会报错，自己的应用如何配合其他录音应用，何时放弃录音权限，何时能获取
+
+1. Android系统中如果有一个应用在录音，你在调用AudioRecord startRecording方法开启录音是会报错，此时，可以通过方法AudioRecord.getRecordingState() == AudioRecord.RECORDSTATE_RECORDING，来判断自己的应用是否可以正常录音
+
+2. 监听系统录音状态，选择合适的处理方式
+
+```java
+mRecordingCallback = new SystemRecordingCallback();
+mAudioManger.registerAudioRecordingCallback(mRecordingCallback,null);
+private class SystemRecordingCallback extends AudioManager.AudioRecordingCallback {
+    private final String TAG = "CaptureService.SystemRecordingCallback";
+    @Override
+    public void onRecordingConfigChanged(List<AudioRecordingConfiguration> configs) {
+        super.onRecordingConfigChanged(configs);
+        int activeSize = configs.size();
+        if (activeSize == 0) {
+            //这时候，没有在录音的app.你自己的就可以启动了
+        } else {
+            for (int i = 0; i < activeSize; i++) {
+                AudioRecordingConfiguration config = configs.get(i);
+                int source = config.getClientAudioSource();
+                switch (source) {
+                    case MediaRecorder.AudioSource.MIC:
+                        ...
+                        //别人想要录音的时候，在这里把自己停掉吧
+                        break;
+                }
+            }
+        }
+    }
+}
+```
+
+参考：
+[Android录音的几个过程控制]: https://blog.csdn.net/bberdong/article/details/85761548
+[共享音频输入]:https://developer.android.google.cn/guide/topics/media/sharing-audio-input?hl=zh-cn

@@ -49,6 +49,7 @@ import Umami from '~/icons/umami.svg'
 import Vercel from '~/icons/vercel.svg'
 import VSCode from '~/icons/vscode.svg'
 import Webpack from '~/icons/webpack.svg'
+import Android from '~/icons/android.svg'
 
 export const BrandsMap = {
   Commitlint: {
@@ -266,6 +267,10 @@ export const BrandsMap = {
     Icon: Pnpm,
     url: 'https://pnpm.io/',
   },
+  Android: {
+    Icon: Android,
+    url: 'https://developer.android.google.cn/?hl=zh-cn',
+  },
 } as const
 
 export function Brand(props: {
@@ -291,7 +296,7 @@ export function Brand(props: {
   }
 
   return (
-    <Link href={`${url}?ref=leohuynh.dev`} className={className}>
+    <Link href={`${url}?ref=diallee.com`} className={className}>
       <Icon className={iconClassName} fill="currentColor" />
     </Link>
   )
