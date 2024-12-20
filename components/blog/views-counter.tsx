@@ -25,7 +25,7 @@ export function ViewsCounter({
 
   return (
     <span className={className}>
-      {isLoading ? '---' : `${stats.views || 0} views`}
+      {isLoading ? '---' : `${stats.views || 0} 查看`}
     </span>
   )
 }

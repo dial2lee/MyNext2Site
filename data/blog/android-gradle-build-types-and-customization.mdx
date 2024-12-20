@@ -1,0 +1,98 @@
+---
+title: 'Android Gradle构建类型和定制'
+date: '2017-12-08 16:58:10'
+tags: ['android', 'gradle', '构建']
+draft: false
+summary: 'Gradle的android插件默认支持两种不同类型的构建类型'
+authors: ['default']
+---
+
+## 处理构建类型
+
+> Gradle的android插件默认支持两种不同类型的构建类型：debug和release。可以通过模块构建文件中的buildTypes定制配置。
+
+```Gradle
+buildTypes {
+  release {
+      minifyEnabled true
+      shrinkResource true
+      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+  }
+  debug {
+    applicationIdSuffix '.debug'
+    versionNameSuffix '-debug'
+  }
+}
+```
+
+通过在debug构建类型中配置applicationIdSuffix和versionNameSuffix可以在同一台设备上安装发布版本和调试版本
+
+另外一个构建类型属性debuggable，调试构建类型自动设置为true，其他类型默认为false。
+
+## 产品定制和变种
+
+> 定制允许构建同一个App的多个版本，可以使用productFlavors来声明定制产品
+
+```Gradle
+android {
+  productFlavors {
+    arrogant {
+      applicationId 'xxxx'
+    }
+    friendly {
+      applicationId 'xxxxxx'
+    }
+  }
+}
+```
+
+每个定制定义了自己的源代码和资源，其与主代码集是兄弟关系。
+app/src/main/java
+app/src/arrogant/java
+app/src/friendly/java
+
+app/src/main/res
+app/src/arrogant/res
+app/src/friendly/res
+
+类似的目录结构也支持构建类型，构建类型和定制的组合称为变体
+
+当时用构建定制时，assemble任务会构建所有可能的定制，assemble`<Variant>`任务只构建特定组合的构建类型和定制
+
+优先级排序：build > flavor
+
+## 合并资源和定制维度
+
+给定制添加合适的资源目录，添加相应的文件并修改其包含的值（资源名相同），可以改变产品定制的图片、文本或者其他资源。
+
+合并非java资源很容易，只需要加合适的目录和文件，定制中的值会覆盖main中的值。从Build Variants视图选择一个独立的定制来部署。
+
+定位维度（flavorDimensions），来区分你应用程序的不同版本
+
+```Gradle
+flavorDimensions 'attitude', 'client'
+
+productFlavors {
+  arrogant {
+    dimensions 'attitude'
+    applicationId 'xxxx'
+  }
+  friendly {
+    dimensions 'attitude'
+    applicationId 'xxxxxx'
+  }
+  stark {
+    dimensions 'client'
+  }
+  wayne {
+    dimensions 'client'
+  }
+}
+```
+
+不同的维度组合成更多的变体
+flavorDimensions定义靠前的维度在资源合并中拥有更高的优先级
+
+## 合并不同定制的Java源代码
+
+> 各种定制和构建的源代码全路径名不能相同

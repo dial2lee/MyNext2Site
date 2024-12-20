@@ -50,7 +50,7 @@ export let metadata: Metadata = {
     url: './',
     siteName: SITE_METADATA.title,
     images: [SITE_METADATA.socialBanner],
-    locale: 'en_US',
+    locale: 'zh-CN',
     type: 'website',
   },
   alternates: {

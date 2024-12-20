@@ -1,17 +1,10 @@
 'use client'
 
 import { clsx } from 'clsx'
-import { usePathname } from 'next/navigation'
 import { Link } from '~/components/ui/link'
-import { SpotifyNowPlaying } from '~/components/ui/now-playing'
-import { SITE_METADATA } from '~/data/site-metadata'
-import MadeInVietNam from '~/icons/miv.svg'
-import { BuiltWith } from './built-with'
+import Image from 'next/image'
 
 export function FooterBottom() {
-  let pathname = usePathname()
-  let isHomePage = pathname === '/'
-
   return (
     <div
       className={clsx([
@@ -20,20 +13,22 @@ export function FooterBottom() {
         'border-t border-gray-200 dark:border-gray-700',
       ])}
     >
-      {isHomePage ? (
-        <BuiltWith />
-      ) : (
-        <SpotifyNowPlaying
-          className="w-full justify-center truncate [--artist-color:var(--color-gray-500)] md:max-w-[50%] md:justify-start"
-          songEffect="underline"
-          showCover
-        />
-      )}
-      <Link href={SITE_METADATA.siteRepo}>
-        <span data-umami-event="made-in-vietnam">
-          <MadeInVietNam />
-        </span>
-      </Link>
+      <div className="flex items-center"></div>
+      <div className="my-2 flex space-x-2 text-sm text-gray-500 dark:text-gray-400">
+        <Image
+          src={'/static/images/public_security_filing.png'}
+          alt={'公安备案图标'}
+          width={18}
+          height={18}
+        />{' '}
+        <Link href="https://beian.mps.gov.cn/#/query/webSearch?code=32011502011771">
+          苏公网安备32011502011771
+        </Link>
+        <span>{` / `}</span>
+        <Link href="https://beian.miit.gov.cn">苏ICP备2024145282号</Link>
+        <span>{` / `}</span>
+        <div>{`Copyright © ${new Date().getFullYear()}`}</div>
+      </div>
     </div>
   )
 }

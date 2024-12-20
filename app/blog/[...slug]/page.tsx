@@ -53,7 +53,7 @@ export async function generateMetadata(props: {
       title: post.title,
       description: post.summary,
       siteName: SITE_METADATA.title,
-      locale: 'en_US',
+      locale: 'zh-CN',
       type: 'article',
       publishedTime: publishedAt,
       modifiedTime: modifiedAt,

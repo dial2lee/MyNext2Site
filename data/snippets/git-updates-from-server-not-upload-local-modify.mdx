@@ -1,0 +1,23 @@
+---
+heading: 'Git只更新服务器修改不上传本地修改'
+title: 'Git update-index命令的使用方法'
+date: '2018-08-09 10:01:16'
+icon: 'Git'
+draft: false
+summary: 'Git update-index命令的使用方法'
+tags: ['git']
+---
+
+> 在使用Git的时候会遇到本地有一个需要长久的修改，但是不想提交到服务器，但是又想服务器上文件有更新时能同步到本地，这时我们可以使用如下的命令。
+
+忽略文件本地修改
+
+```git
+git update-index --skip-worktree <file>
+```
+
+撤销忽略
+
+```git
+git update-index --no-skip-worktree <file>
+```

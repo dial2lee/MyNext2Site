@@ -1,0 +1,260 @@
+---
+title: 'Android屏幕适配基础知识'
+date: '2024-05-14 10:25'
+tags: ['android', 'screen']
+draft: false
+summary: 'Android屏幕适配不管是谷歌官方还是三方都有很多方案，但这些方案都是基于Android屏幕相关的知识提出的'
+authors: ['default']
+---
+
+## 屏幕相关概念
+
+### 屏幕尺寸
+
+- 含义：手机对角线的物理尺寸
+- 单位：英寸（inch），1英寸 = 2.54cm
+
+### 屏幕分辨率
+
+- 含义：手机在横向、纵向上的像素点数总和
+  一般描述屏幕分辨率的方式是“宽 x 高”，比如1080 x 1920，表示宽度方向上有1080个像素点，高度方向上有1920个像素点
+- 单位：px（pixel），1px = 1像素点
+
+### 屏幕像素密度
+
+- 含义：每英寸的像素点数
+- 单位：dpi（dots per inch）
+  假设设备内每英寸有160个像素，那么该设备的屏幕像素密度=160dpi
+
+Android系统都会根据屏幕 dpi 选择相应的资源。如果您没有为该密度提供特定于密度的资源，系统会找到下一个最匹配的资源，并对其进行缩放以适应屏幕。
+
+| 密度类型 | 说明                                                                                                       |
+| -------- | ---------------------------------------------------------------------------------------------------------- |
+| ldpi     | 适用于低密度 (ldpi) 屏幕（约 120dpi）的资源。                                                              |
+| mdpi     | 适用于中密度 (mdpi) 屏幕（约 160dpi）的资源。这是基准密度。                                                |
+| hdpi     | 适用于高密度 (hdpi) 屏幕（约 240dpi）的资源。                                                              |
+| xhdpi    | 适用于超高密度 (xhdpi) 屏幕（约 320dpi）的资源。                                                           |
+| xxhdpi   | 适用于超超高密度 (xxhdpi) 屏幕（约 480dpi）的资源。                                                        |
+| xxxhdpi  | 适用于超超超高密度 (xxxhdpi) 屏幕（约 640dpi）的资源。                                                     |
+| nodpi    | 适用于所有密度的资源。这些是与密度无关的资源。无论当前屏幕的密度如何，系统都不会缩放以此限定符标记的资源。 |
+
+```
+res/
+  drawable-xxxhdpi/
+  drawable-xxhdpi/
+  drawable-xhdpi/
+  drawable-hdpi/
+  drawable-mdpi/
+  drawable-ldpi/
+  drawable-nodpi/
+```
+
+如需为不同的密度创建备用可绘制位图资源，请遵循六种主要密度之间的 3:4:6:8:12:16 缩放比例。
+
+### **屏幕尺寸、分辨率、像素密度三者关系**
+
+分辨率是宽x高，屏幕大小是以寸为单位，那么三者的关系是：
+
+![屏幕尺寸、分辨率、像素密度三者换算公式](/static/images/screen-adaptation/px-inch-dp-relationship.png)
+
+分辨率为 480\*800 的设备举例，在 3.8 寸的屏幕下，DPI 应该约等于 240。计算公式：
+
+![屏幕尺寸、分辨率、像素密度三者换算](/static/images/screen-adaptation/px-inch-dp-relationship-example.svg)
+
+屏幕像素密度与屏幕尺寸和屏幕分辨率有关，在单一变化条件下，屏幕尺寸越小、分辨率越高，像素密度越大，反之越小。
+
+### **密度无关像素**
+
+- 含义：与终端上的实际物理像素点无关
+- 单位：dp或dip（density-independent pixel），可以保证在不同屏幕像素密度的设备上显示相同的效果(屏幕分辨率与屏幕密度需满足如下图对应关系，平板由于dpi会较途中低，导致显示效果不一样)
+
+这个是Android基于物理设备的dp**i**抽象出来的一个单位。它是以 **`160dpi`** 的屏幕为基准定义的，在**160dpi** 的屏幕的屏幕上**1dp=1px**，那么我们就可以得出其换算公式： **1dp = 屏幕dpi / 160**
+
+| 密度类型             | 代表的分辨率（px） | 屏幕密度（dpi） | 换算（px/dp） | 比例 |
+| -------------------- | ------------------ | --------------- | ------------- | ---- |
+| 低密度（ldpi）       | 240x320            | 120             | 1dp=0.75px    | 3    |
+| 中密度（mdpi）       | 320x480            | 160             | 1dp=1px       | 4    |
+| 高密度（hdpi）       | 480x800            | 240             | 1dp=1.5px     | 6    |
+| 超高密度（xhdpi）    | 720x1280           | 320             | 1dp=2px       | 8    |
+| 超超高密度（xxhdpi） | 1080x1920          | 480             | 1dp=3px       | 12   |
+
+### **独立比例像素**
+
+- 含义： 其与dp基本一样，也是像素无关的。但是用在描述字体的大小上，其尺寸会同时受到屏幕密度以及用户对字体的大小偏好设置。 例如：在手机的字体设置为默认大小时，使用**dp**与**sp**描述字体的大小是一样的。但是当我们改变了手机的字体默认设置的字号后，**dp**描述的字体大小没有变化，但是**sp**描述的字体大小却相应的发生了变化。
+- 单位：sp（scale-independent pixel）
+
+## Android中的相关属性
+
+### DisplayMetrics
+
+DisplayMetrics 类描述有关显示的一般信息，例如其大小，密度和字体缩放等。
+
+```java
+// 从Display获取DisplayMetrics信息（获取的DisplayMetrics只可读）
+Display display = getWindowManager().getDefaultDisplay();
+DisplayMetrics metrics = new DisplayMetrics();
+display.getMetrics(metrics);
+
+//第二种获取DisplayMetrics的方式，可修改里面的参数
+context.getResources().getDisplayMetrics()
+```
+
+widthPixels 屏幕宽（单位像素）
+
+heightPixels 屏幕高（单位像素）
+
+densityDpi 屏幕密度（单位dpi）
+
+density 官方称它为显示的逻辑密度，这不太好理解，我把它理解为密度的比例，也可以理解为dp换算为像素的比例（即1个dp等于几个像素）。标准的屏幕密度为160，它的密度比例就是1，即1个dp就等于1个像素。如果你手机的densityDpi为320，则它是标准屏幕密度的两倍（320 / 160 = 2），则density = 2，表示1个dp就等于2个像素。
+
+scaledDensity 字体比例。它的默认值也是densityDpi / 160，也就是说默认和density值是一样的，但是我们在手机上是可以设置字体大小的，这时候的scaledDensity就会发生改变。
+
+一般在设置大小之前会通过方法 `TypedValue.applyDimension` 进行单位换算转化为像素大小
+
+```java
+ public static float applyDimension(int unit, float value, DisplayMetrics metrics) {
+    switch (unit) {
+    case COMPLEX_UNIT_PX:
+        return value;
+    case COMPLEX_UNIT_DIP:
+        return value * metrics.density;
+    case COMPLEX_UNIT_SP:
+        return value * metrics.scaledDensity;
+    case COMPLEX_UNIT_PT:
+        return value * metrics.xdpi * (1.0f/72);
+    case COMPLEX_UNIT_IN:
+        return value * metrics.xdpi;
+    case COMPLEX_UNIT_MM:
+        return value * metrics.xdpi * (1.0f/25.4f);
+    }
+    return 0;
+}
+```
+
+根据传递过来的unit，来分别计算出不同单位对应的像素值是多少，可以看到sp和dp的区别就是density和scaledDensity的区别。
+
+### adb shell wm指令相关
+
+wm 是查看和设置显示信息的指令
+
+```bash
+Window manager (window) commands:
+  size [reset|WxH|WdpxHdp] [-d DISPLAY_ID]
+    Return or override display size.
+    width and height in pixels unless suffixed with 'dp'.
+  density [reset|DENSITY] [-d DISPLAY_ID]
+    Return or override display density.
+```
+
+**wm size：查看和设置显示分辨率**
+
+```bash
+generic_x86_arm:/ $ wm size                // 查看当前的分辨率
+Physical size: 1440x3120
+generic_x86_arm:/ $ wm size 720x1560       // 设置分辨率
+wm size 720x1560
+generic_x86_arm:/ $ wm size
+Physical size: 1440x3120                   // 原始分辨率
+Override size: 720x1560                    // 设置的分辨率
+generic_x86_arm:/ $ wm size reset          // 恢复设置前的分辨率
+```
+
+wm density：查看和设置显示密度
+
+```bash
+generic_x86_arm:/ $ wm density        // 查看当前显示密度
+Physical density: 560
+generic_x86_arm:/ $ wm density 280    // 修改显示密度
+generic_x86_arm:/ $ wm density
+Physical density: 560                 // 原始显示密度
+Override density: 280                 // 修改后的显示密度
+generic_x86_arm:/ $ wm density reset  // 恢复设置前的显示密度
+```
+
+## 为什么要进行屏幕适配
+
+由于Android系统的开放性，任何用户、开发者、OEM厂商、运营商都可以对Android进行定制，于是导致系统和屏幕的碎片化。其中不同的屏幕尺寸和分辨率就很容易出现同一元素在不同手机上显示不同的问题。
+
+![**屏幕碎片化**](/static/images/screen-adaptation/screen-fragmentation.png)
+
+试想一下这么一个场景：
+
+为4.3寸屏幕准备的UI设计图，运行在5.0寸的屏幕上，很可能在右侧和下侧存在大量的空白；而5.0寸的UI设计图运行到4.3寸的设备上，很可能显示不下。
+
+为了保证用户获得一致的用户体验效果，使得某一元素在Android不同尺寸、不同分辨率的手机上具备相同的显示效果（空间比例都能保持一致），于是，我们便需要对Android屏幕进行适配。
+
+## 基于等比例的屏幕适配
+
+### 基本原理
+
+不管在布局文件中填写的是什么单位，最后都是通过 `TypedValue.applyDimension` 方法转化为 **px。**
+
+我们常用的 **px** 转 **dp** 的公式 **dp = px / density**，就是根据方法 `TypedValue.applyDimension` 得来的，**density** 在公式的运算中扮演着至关重要的一步。
+
+大部分市面上的 **Android** 设备的屏幕高宽比都不一致，这时我们只以高或宽其中的一个作为基准进行适配，就会有效的避免布局在高宽比不一致的屏幕上出现变形的问题。
+
+如果每个 **View** 的 **dp** 值是固定不变的，那我们只要保证每个设备的屏幕总 **dp** 宽度不变，就能保证每个 **View** 在所有分辨率的屏幕上与屏幕的比例都保持不变，从而完成等比例适配，并且这个屏幕总 **dp** 宽度如果还能保证和设计图的宽度一致的话，那我们在布局时就可以直接按照设计图上的尺寸填写 **dp** 值
+
+**屏**幕的总 px 宽度 **/ density = 屏幕的总 dp 宽度**
+
+在这个公式中我们要保证 **屏幕的总 dp 宽度** 和 **设计图总宽度** 一致，并且在所有分辨率的屏幕上都保持不变，我们需要怎么做呢？**屏幕的总 px 宽度** 每个设备都不一致，这个值是肯定会变化的，这时今日头条的公式就派上用场了
+
+**当前设备屏幕总宽度（单位为像素）/ 设计图总宽度（单位为 dp) = density**
+
+这个公式就是把上面公式中的 **屏幕的总 dp 宽度** 换成 **设计图总宽度**，原理都是一样的，只要 **density** 根据不同的设备进行实时计算并作出改变，就能保证 **设计图总宽度** 不变，也就完成了适配了。
+
+### 缺点
+
+1. 因为是等比例适配所以适合一套UI按比例缩放适配不同的屏幕，并不适合因屏幕变化显示不同的布局样式（适配不同单纯从技术角度来分析，设计往往要求的并非是等比缩放）。
+2. 因为屏幕宽高比例问题只能以一个方向进行适配另外一个方向需要设为可滚动。
+3. Android系统组件和三方库可能存在显示问题，因为不是以我们的设计图宽高为基础设计的尺寸大小（使用类似的方式通过计算metrics.xdpi使用冷门单位pt来规避）
+
+## 屏幕适配中布局
+
+### **使用wrap_content、match_parent、weight**
+
+要确保布局的灵活性并适应各种尺寸的屏幕，应使用 “wrap_content” 和 “match_parent” 控制某些视图组件的宽度和高度。
+
+使用 “wrap_content”，系统就会将视图的宽度或高度设置成所需的最小尺寸以适应视图中的内容，而 “match_parent” 则会展开组件以匹配其父视图的尺寸。
+
+如果使用 “wrap_content” 和 “match_parent” 尺寸值而不是硬编码的尺寸，视图就会相应地仅使用自身所需的空间或展开以填满可用空间。此方法可让布局正确适应各种屏幕尺寸和屏幕方向。
+
+`weight` 是线性布局的一个独特的属性，我们可以使用这个属性来按照比例对界面进行分配，完成一些特殊的需求。
+
+### 使用相对布局，禁用绝对布局
+
+在开发中，我们大部分时候使用的都是线性布局、相对布局和帧布局，绝对布局由于适配性极差，所以极少使用。
+
+由于各种布局的特点不一样，所以不能说哪个布局好用，到底应该使用什么布局只能根据实际需求来确定。我们可以使用 LinearLayout 的嵌套实例并结合 “wrap_content” 和 “match_parent”，以便构建相当复杂的布局。不过我们无法通过 LinearLayout 精确控制子视图的特殊关系，系统会将 LinearLayout 中的视图直接并排列出。
+
+如果我们需要将子视图排列出各种效果而不是一条直线，通常更合适的解决方法是使用 RelativeLayout，这样就可以根据各组件之间的特殊关系指定布局了。
+
+### 使用ConstraintLayout
+
+如需创建适用于不同屏幕尺寸的自适应布局，最佳做法是将 ConstraintLayout 用作界面中的基本布局。使用 ConstraintLayout，您可以根据布局中视图之间的空间关系指定每个视图的位置和大小。通过这种方式，当屏幕尺寸改变时，所有视图都可以一起移动和拉伸。
+
+如需了解详情，请参阅使用 [ConstraintLayout](https://developer.android.google.cn/develop/ui/views/layout/constraint-layout?hl=zh-cn) 构建自适应界面。
+
+![ConstraintLayout布局示例](/static/images/screen-adaptation/android-constraintLayout.png)
+
+但是，ConstraintLayout 并不能解决所有布局场景（特别是动态加载的列表，对于此类布局，应使用 RecyclerView），但无论您使用何种布局，都应该避免对布局尺寸进行硬编码。
+
+## 不同屏幕下的布局预览
+
+Android Studio 可以帮助我们对layout文件进行实时的预览，我们也可以通过更改配置看查看对应配置下的显示效果，比如横竖屏、不同设备尺寸、不同API、不同主题等待
+
+![布局预览](/static/images/screen-adaptation/view-preview.png)
+
+![布局预览调整工具](/static/images/screen-adaptation/view-preview-tools.png)
+
+1. Design Surface：选择在编辑器中查看布局的方式；可以选择 Design 视图（布局的真实预览）、Blueprint 视图（只显示每个视图的轮廓），或选择 Design + Blueprint，同时并排查看两个视图，也提供了色盲下的显示效果。
+2. Orientation：在横向模式和纵向模式屏幕方向之间选择
+3. Device：选择设备类型（手机/平板电脑、Android TV 或 Wear OS）和界面配置（尺寸和密度）。 您可以从多个预配置的设备类型和您自己的 AVD 定义中进行选择，或从列表中选择 Add Device Definition 新建 AVD 定义。
+4. API version：用于选择要在上面预览布局的 Android 版本。
+5. Theme：用于选择将应用到预览的 UI 主题。
+6. Locale：用于选择显示界面字符串的语言。
+
+布局文件一次只能预览单个尺寸的效果，当针对多种屏幕大小和分辨率进行开发时，需要验证对UI所做的更改是否在支持的每个屏幕上都是正常的，可以使用Android Stuido的“布局验证”（Layout Validation）窗口同时预览不同屏幕和配置上的布局。
+
+通过新建不同的配置可以查看配置对应下的预览效果。新建配置的选项基本包含了布局预览的配置项。
+![Layout Validation](/static/images/screen-adaptation/layout-validation.gif)

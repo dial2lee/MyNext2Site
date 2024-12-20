@@ -4,7 +4,6 @@ import { clsx } from 'clsx'
 import type React from 'react'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Image } from '~/components/ui/image'
-import { SpotifyNowPlaying } from '~/components/ui/now-playing'
 import { SITE_METADATA } from '~/data/site-metadata'
 import { ProfileCardInfo } from './profile-info'
 
@@ -19,8 +18,8 @@ export function ProfileCard() {
     let { width, height, x, y } = ref.current.getBoundingClientRect()
     let mouseX = Math.abs(clientX - x)
     let mouseY = Math.abs(clientY - y)
-    let rotateMin = -15
-    let rotateMax = 15
+    let rotateMin = -5
+    let rotateMax = 5
     let rotateRange = rotateMax - rotateMin
 
     let rotate = {
@@ -73,13 +72,6 @@ export function ProfileCard() {
             aspectRatio: '383/240',
           }}
           loading="eager"
-        />
-        <SpotifyNowPlaying
-          className={clsx([
-            'bg-gray-900 px-3 py-1.5 xl:px-5',
-            '[--song-color:var(--color-gray-200)]',
-            '[--artist-color:var(--color-gray-400)]',
-          ])}
         />
         <ProfileCardInfo />
         <span className="h-1.5 bg-linear-to-r from-green-300 via-blue-500 to-purple-600" />

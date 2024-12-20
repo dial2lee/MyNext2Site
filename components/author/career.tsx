@@ -7,201 +7,99 @@ import { Twemoji } from '~/components/ui/twemoji'
 
 const EXPERIENCES = [
   {
-    org: 'Weaverse.io',
-    url: 'https://weaverse.io',
-    logo: '/static/images/weaverse-logo.png',
-    start: 'Mar 2022',
-    end: 'Present',
-    title: 'CTO / Co.Founder / Software Engineer',
+    org: '联通智网',
+    url: 'https://www.cu-sc.com/',
+    logo: '/static/images/cusc-logo.png',
+    start: '2021年5月',
+    end: '现在',
+    title: '软件工程师 从事车机端应用开发',
     icon: 'briefcase',
     event: 'career-weaverse',
     details: () => {
       return (
         <ul className="[&>li]:my-2 [&>li]:pl-0">
-          <li>
-            Building a smart{' '}
-            <a
-              target="_blank"
-              rel="noopener noreferrer"
-              href="https://weaverse.io/demo"
-            >
-              Shopify Hydrogen Theme Customizer
-            </a>{' '}
-            to help creators build their own high quality and high performance
-            headless storefronts easily.
-          </li>
+          <li>基于思必驰的语音技术开发车机端语音助手应用</li>
+          <li>语音助手应用适配多语音能力供应商的架构调整</li>
         </ul>
       )
     },
   },
   {
-    org: 'FoxEcom',
-    url: 'https://foxecom.com/',
-    logo: '/static/images/foxecom-logo.jpeg',
-    start: 'May 2021',
-    end: 'Feb 2022',
-    title: 'Senior Software Engineer',
+    org: '辛巴科技',
+    url: 'https://www.simbalink.cn/',
+    logo: '/static/images/simba-logo.jpg',
+    start: '2019年11月',
+    end: '2021年4月',
+    title: '软件工程师 从事车机端应用开发',
     icon: 'man-technologist',
     event: 'career-foxecom',
     details: () => {
       return (
         <ul className="[&>li]:my-2 [&>li]:pl-0">
-          <li>
-            Built{' '}
-            <a
-              target="_blank"
-              rel="noopener noreferrer"
-              href="https://themeforest.net/item/minimog-the-high-converting-shopify-theme/33380968"
-            >
-              Minimog
-            </a>{' '}
-            - a multipurpose Shopify Theme (top best selling templates on Envato
-            Market)
-          </li>
-          <li>
-            Built{' '}
-            <a
-              target="_blank"
-              rel="noopener noreferrer"
-              href="https://apps.shopify.com/foxecom-boost-sales"
-            >
-              Fox Kit Shopify App
-            </a>{' '}
-            - The upsells and boost conversion tool built to support Minimog
-            theme
-          </li>
+          <li>从零基于讯飞语音基础能力搭建车机语音应用的框架和功能的开发</li>
+          <li>开发一款手表控车应用</li>
         </ul>
       )
     },
   },
   {
-    org: 'Coc Coc',
-    url: 'https://coccoc.com/en',
-    logo: '/static/images/coc-coc-logo.png',
-    start: 'May 2020',
-    end: 'Apr 2021',
-    title: 'Frontend Engineer',
+    org: '苏宁软件',
+    url: 'https://www.blockx.cn/index.html',
+    logo: '/static/images/suning-logo.jpg',
+    start: '2018年9月',
+    end: '2019年10月',
+    title: '软件工程师 从事人工智能应用开发',
     icon: 'man-technologist',
     event: 'career-coc-coc',
     details: () => {
       return (
         <ul className="[&>li]:my-2 [&>li]:pl-0">
+          <li>基于部门语音基础能力开发一款Android用户端应用</li>
           <li>
-            Working on the <strong>#1 web browser & search engine</strong> in{' '}
-            <strong>Viet Nam</strong> (30M+ users)
+            基于Electron等技术开发一款称管理桌面端,有效的提升了智能货柜和无人商店的货柜称管理的便携
           </li>
-          <li>
-            Built{' '}
-            <a
-              target="_blank"
-              rel="noopener noreferrer"
-              href="https://coccoc.com/webhp"
-            >
-              Coc Coc's newsfeed
-            </a>
-          </li>
-          <li>Maintained and optimized new tab's widgets and performance</li>
+          <li>引入jenkins自动构建打包提升了效率</li>
+          <li>负责开发一款基于3D结构光摄像头的人脸识别支付应用，应用于公司食堂支付场景</li>
         </ul>
       )
     },
   },
   {
-    org: 'BraveBits',
-    url: 'https://bravebits.co/',
-    logo: '/static/images/bb-logo.png',
-    start: 'Aug 2018',
-    end: 'Apr 2020',
-    title: 'Fullstack Developer',
+    org: '中兴软创',
+    url: 'https://www.iwhalecloud.com/',
+    logo: '/static/images/ztesoft-logo.jpg',
+    start: '2013年3月',
+    end: '2018年12月',
+    title: '软件工程师 从事Android应用开发',
     icon: 'man-technologist',
     event: 'career-bravebits',
     details: () => {
       return (
         <ul className="[&>li]:my-2 [&>li]:pl-0">
-          <li>Working on the #1 Page Builder app on Shopify app store</li>
-          <li>Built Pagefly's Analytics APIs</li>
           <li>
-            Built{' '}
-            <a
-              target="_blank"
-              rel="noopener noreferrer"
-              href="https://github.com/sellersmith/slider-x"
-            >
-              Slider-x
-            </a>
+            为各省、市电信分公司开发资源管理Android端，主要是基于资源数据的界面和ArcGis地图管理
           </li>
+          <li>负责移动团队的管理和技术框架升级，安排、协调组员的开发任务，推进各项目的开展</li>
+          <li>参与React Native应用框架fish-mobile-x的开发任务，一次编写多端运行</li>
         </ul>
       )
     },
   },
   {
-    org: 'MindX - Technology School',
-    url: 'https://mindx.edu.vn/',
-    logo: '/static/images/mindx-logo.jpeg',
+    org: '诚迈科技',
+    url: 'https://www.archermind.com/',
+    logo: '/static/images/archermind-logo.jpg',
     start: 'May 2017',
     end: 'Jul 2018',
-    title: 'Instructor and Developer',
+    title: '软件工程师 从事Android车载应用开发',
     icon: 'man-technologist',
     event: 'career-mindx',
     details: () => {
       return (
         <ul className="[&>li]:my-2 [&>li]:pl-0">
+          <li>负责车载终端系统原生应用的定制开发和bug修复，主要包括短信、图库、指南针等应用</li>
           <li>
-            Built{' '}
-            <a target="_blank" rel="noopener noreferrer" href="http://lok.vn/">
-              Love of Knowledge
-            </a>{' '}
-            (Front-end Developer)
-          </li>
-          <li>
-            Built{' '}
-            <a
-              target="_blank"
-              rel="noopener noreferrer"
-              href="https://hta218.github.io/get-a-room-api-docs/"
-            >
-              Room Finder APIs
-            </a>{' '}
-            (Back-end Developer)
-          </li>
-          <li>
-            Built{' '}
-            <a
-              target="_blank"
-              rel="noopener noreferrer"
-              href="https://github.com/hta218/Travel_Egypt"
-            >
-              Travel Egypt
-            </a>{' '}
-            - a picture puzzle game made by pygame (Python)
-          </li>
-          <li>
-            Mentored Python fundamentals and Python web development for newbies
-          </li>
-        </ul>
-      )
-    },
-  },
-  {
-    org: 'Hanoi University of Science and Technology',
-    url: 'https://www.hust.edu.vn/en/',
-    logo: '/static/images/hust-logo.png',
-    start: 'Sep 2013',
-    end: 'Feb 2019',
-    title: 'Student at SEEE (School of Electrical & Electronic Engineering)',
-    icon: 'man-student',
-    event: 'career-hust',
-    details: () => {
-      return (
-        <ul className="[&>li]:my-2 [&>li]:pl-0">
-          <li>
-            Get a good degree at{' '}
-            <strong>School of Electrical & Electronic Engineering</strong>
-          </li>
-          <li>
-            And yeah! My major subject was{' '}
-            <strong>Electronics and Telecommunications</strong>, but I couldn't
-            find interest in that field. So I learned Software Engineering
-            instead, and became what I am today.
+            负责或者参与第三方应用的设计、技术预研、开发工作，比如远程文件管理、数据备份和恢复等
           </li>
         </ul>
       )
