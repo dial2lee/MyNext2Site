@@ -62,8 +62,8 @@ export default async function TagPage(props: {
       title={title}
       description={
         <>
-          Things I've written about{' '}
-          <span className="ml-1 font-semibold">#{tag}</span>
+          关于{' '}
+          <span className="ml-1 font-semibold">#{tag}</span>的内容
         </>
       }
       posts={filteredPosts}

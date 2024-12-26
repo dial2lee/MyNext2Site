@@ -61,8 +61,10 @@ export function LatestPosts({
             aria-label="All posts"
           >
             <GrowingUnderline data-umami-event="all-posts">
-              <span className="hidden md:inline-block">所有{view === 'posts' ? '文章' : '片段'}</span>
-              <span className="md:hidden">More</span> &rarr;
+              <span className="hidden md:inline-block">
+                所有{view === 'posts' ? '文章' : '片段'}
+              </span>
+              <span className="md:hidden">所有</span> &rarr;
             </GrowingUnderline>
           </Link>
         </div>
