@@ -52,7 +52,7 @@ export function ListLayoutWithTags({
                 )}
                 onClick={() => setView('blogs')}
               >
-                Blogs
+                文章
               </button>
             )}
             {hasBlogs && hasSnippets ? <span>/</span> : null}
@@ -67,7 +67,7 @@ export function ListLayoutWithTags({
                 )}
                 onClick={() => setView('snippets')}
               >
-                Snippets
+                片段
               </button>
             )}
           </div>
