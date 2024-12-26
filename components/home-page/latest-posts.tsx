@@ -52,7 +52,7 @@ export function LatestPosts({
               <span className="hidden md:inline-block">
                 所有{view === 'posts' ? '文章' : '片段'}
               </span>
-              <span className="md:hidden">More</span> &rarr;
+              <span className="md:hidden">所有</span> &rarr;
             </GrowingUnderline>
           </Link>
         </div>
