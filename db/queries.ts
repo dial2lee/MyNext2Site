@@ -1,6 +1,16 @@
 import { and, eq } from 'drizzle-orm'
 import { db } from './index'
-import { type SelectStats, type StatsType, statsTable } from './schema'
+import {
+  type InsertBook,
+  type InsertMovie,
+  type SelectBook,
+  type SelectMovie,
+  type SelectStats,
+  type StatsType,
+  booksTable,
+  moviesTable,
+  statsTable,
+} from './schema'
 
 export async function getBlogStats(type: StatsType, slug: string) {
   let stats = await db
@@ -31,4 +41,34 @@ export async function updateBlogStats(
     .set(updates)
     .where(and(eq(statsTable.type, type), eq(statsTable.slug, slug)))
   return updatedStats[0]
+}
+
+export async function upsertBooks(booksData: InsertBook[]) {
+  if (booksData.length === 0) return
+
+  let books: InsertBook[] = booksData.map((bookData) => ({
+    ...bookData,
+    updatedAt: new Date(),
+  }))
+
+  await db.insert(booksTable).values(books)
+}
+
+export async function upsertManyMovies(moviesData: InsertMovie[]) {
+  if (moviesData.length === 0) return
+
+  let movies: InsertMovie[] = moviesData.map((movieData) => ({
+    ...movieData,
+    updatedAt: new Date(),
+  }))
+
+  await db.insert(moviesTable).values(movies)
+}
+
+export async function getAllBooks(): Promise<SelectBook[]> {
+  return db.select().from(booksTable).orderBy(booksTable.userReadAt)
+}
+
+export async function getAllMovies(): Promise<SelectMovie[]> {
+  return db.select().from(moviesTable).orderBy(moviesTable.dateRated)
 }

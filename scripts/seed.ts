@@ -67,8 +67,7 @@ export async function seedBooks() {
 
       if (validBooks.length > 0) {
         try {
-          let savedBooks = await upsertBooks(validBooks)
-          console.log(`📚 ${savedBooks.length}/${data.items.length} books saved to database.`)
+          await upsertBooks(validBooks)
         } catch (error) {
           console.error(`❌ Error saving books to database: ${error.message}`)
         }
@@ -177,8 +176,7 @@ async function seedMovies() {
 
             if (validMovies.length > 0) {
               try {
-                let savedMovies = await upsertManyMovies(validMovies)
-                console.log(`🎬 ${savedMovies.length}/${movies.length} movies saved to database.`)
+                await upsertManyMovies(validMovies)
               } catch (error: unknown) {
                 let errorMessage = error instanceof Error ? error.message : String(error)
                 console.error(`❌ Error saving movies to database: ${errorMessage}`)
