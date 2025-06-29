@@ -40,7 +40,12 @@ jobs:
           push: true
           tags: ghcr.io/${{ github.actor }}/${{ vars.APP_NAME }}:${{ steps.get_version.outputs.version }}
           build-args: |
-            MySQL_URL=${{ secrets.DATABASE_URL }}
+            MYSQL_URL=${{ secrets.DATABASE_URL }}
+            GISCUS_REPO=${{ vars.GISCUS_REPO }}
+            GISCUS_REPOSITORY_ID=${{ secrets.GISCUS_REPOSITORY_ID }}
+            GISCUS_CATEGORY=${{ vars.GISCUS_CATEGORY }}
+            GISCUS_CATEGORY_ID=${{ secrets.GISCUS_CATEGORY_ID }}
+            GB_API_TOKEN=${{ secrets.GB_API_TOKEN }}
 
       - name: ssh remote deploy
         uses: fifsky/ssh-action@master
