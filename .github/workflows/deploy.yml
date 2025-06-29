@@ -2,9 +2,9 @@ name: Build And Deploy Docker Image
 
 on:
   push:
-    branches: [my]
-  # pull_request:
-  #   branches: [my]
+    #    branches: [main]
+    tags:
+      - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
   workflow_dispatch:
 
 jobs:
@@ -26,12 +26,19 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GH_TOKEN }}
 
+      - name: Get version without 'v'
+        id: get_version
+        run: |
+          VERSION="${{ github.ref_name }}"
+          VERSION=$(echo "$VERSION" | sed 's/^v//')
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
       - name: Build and push Docker image
         uses: docker/build-push-action@v4
         with:
           context: .
           push: true
-          tags: ghcr.io/${{ github.actor }}/${{ vars.APP_NAME }}:latest
+          tags: ghcr.io/${{ github.actor }}/${{ vars.APP_NAME }}:${{ steps.get_version.outputs.version }}
           build-args: |
             MySQL_URL=${{ secrets.DATABASE_URL }}
 
