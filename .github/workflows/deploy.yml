@@ -42,31 +42,37 @@ jobs:
           build-args: |
             MySQL_URL=${{ secrets.DATABASE_URL }}
 
-      # - name: ssh remote deploy
-      #   uses: fifsky/ssh-action@master
-      #   with:
-      #     command: |
-      #       cd /
-      #       echo -e "1.docker login start==>"
-      #       echo ${{ secrets.ALIYUN_DOCKER_PASSWORD }} | docker login ${{ vars.REGISTRY_MIRROR }} --username ${{ secrets.ALIYUN_DOCKER_USERNAME }} --password-stdin
-
-      #       echo -e "2.docker stop myblog container==>"
-      #       docker container stop ${{ vars.APP_NAME }}
-
-      #       echo -e "3.docker conatainer rm==>"
-      #       docker container rm ${{ vars.APP_NAME }}
-
-      #       echo -e "4.docker image rm==>"
-      #       docker image rm ${{ vars.REGISTRY_MIRROR }}/${{ vars.REGISTRY_NAMESPACE }}/${{ vars.APP_NAME }}:latest
-
-      #       echo -e "5.docker pull==>"
-      #       docker pull ${{ vars.REGISTRY_MIRROR }}/${{ vars.REGISTRY_NAMESPACE }}/${{ vars.APP_NAME }}:latest
-
-      #       echo -e "6.docker container create and start==>"
-      #       docker container run -d -p 3000:3000 --name ${{ vars.APP_NAME }} ${{ vars.REGISTRY_MIRROR }}/${{ vars.REGISTRY_NAMESPACE }}/${{ vars.APP_NAME }}:latest
-
-      #       echo -e "7.docker logout==>"
-      #       docker logout
-      #     host: ${{ secrets.NAS_HOST }}
-      #     user: ${{ secrets.NAS_USER }}
-      #     pass: ${{ secrets.NAS_PASSWORD }}
+      - name: ssh remote deploy
+        uses: fifsky/ssh-action@master
+        with:
+          command: |
+            cd /
+            echo -e "1.docker login start==>"
+            echo ${{ secrets.GH_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+            
+            echo -e "2.docker stop myblog container==>"
+            docker container stop ${{ vars.APP_NAME }}
+            
+            echo -e "3.docker conatainer rm==>"
+            docker container rm ${{ vars.APP_NAME }}
+            
+            echo -e "4.docker image rm==>"
+            docker image ls -q ghcr.io/${{ github.actor }}/${{ vars.APP_NAME }}* | xargs docker image rm -f
+            
+            echo -e "5.docker pull==>"
+            docker pull ghcr.io/${{ github.actor }}/${{ vars.APP_NAME }}:${{ steps.get_version.outputs.version }}
+            
+            echo -e "6.docker container create and start==>"
+            docker container run -d \
+              -p 3000:3000 \
+              -e "NEXT_PUBLIC_GISCUS_REPO=${{ vars.GISCUS_REPO }}" \
+              -e "NEXT_PUBLIC_GISCUS_REPOSITORY_ID=${{ secrets.GISCUS_REPOSITORY_ID }}" \
+              -e "NEXT_PUBLIC_GISCUS_CATEGORY=${{ vars.GISCUS_CATEGORY }}" \
+              -e "NEXT_PUBLIC_GISCUS_CATEGORY_ID=${{ secrets.GISCUS_CATEGORY_ID }}" \
+              -e "GITHUB_API_TOKEN=${{ secrets.GB_API_TOKEN }}" \
+              -e "DATABASE_URL=${{ secrets.DATABASE_URL }}" \
+              --name ${{ vars.APP_NAME }} ghcr.io/${{ github.actor }}/${{ vars.APP_NAME }}:${{ steps.get_version.outputs.version }}
+          host: ${{ secrets.NAS_HOST }}
+          port: ${{ secrets.NAS_PORT }}
+          user: ${{ secrets.NAS_USER }}
+          pass: ${{ secrets.NAS_PASSWORD }}
