@@ -34,8 +34,9 @@ export function AuthorLayout({ children }: Props) {
                 大家好 <Twemoji emoji="waving-hand" />
               </h2>
               <p>
-                我目前主要是使用<strong>Java</strong>、<strong>Kotlin</strong>来构建Android应用。
-                我也对<strong>JavaScript</strong>、<strong>React</strong>等Web前端开发充满兴趣。
+                我目前主要是使用<strong>Java</strong>、<strong>Kotlin</strong>
+                来构建Android应用。 我也对<strong>JavaScript</strong>、
+                <strong>React</strong>等Web前端开发充满兴趣。
                 也希望将人工智能和物联网带入我们的生活。
               </p>
               <p>
@@ -61,35 +62,51 @@ export function AuthorLayout({ children }: Props) {
               <h2>技术栈</h2>
               <p>
                 此博客托管于{' '}
-                <a href="https://www.aliyun.com/" target="_blank">
+                <a
+                  href="https://www.aliyun.com/"
+                  target="_blank"
+                  rel="noreferrer"
+                >
                   阿里云
                 </a>
                 , 基于{' '}
-                <a href="https://nextjs.org/" target="_blank">
+                <a href="https://nextjs.org/" target="_blank" rel="noreferrer">
                   Next.js
                 </a>{' '}
                 and{' '}
-                <a href="https://tailwindcss.com/" target="_blank">
+                <a
+                  href="https://tailwindcss.com/"
+                  target="_blank"
+                  rel="noreferrer"
+                >
                   Tailwind CSS
                 </a>
               </p>
               <p>
                 非常感谢{' '}
-                <a href="https://www.leohuynh.dev/" target="_blank">
+                <a
+                  href="https://www.leohuynh.dev/"
+                  target="_blank"
+                  rel="noreferrer"
+                >
                   Tuan Anh Huynh
                 </a>{' '}
                 提供的开源、美观、易于使用的博客模板。
               </p>
               <p>
                 你也可以打开他的{' '}
-                <a href="https://github.com/hta218/leohuynh.dev" target="_blank">
+                <a
+                  href="https://github.com/hta218/leohuynh.dev"
+                  target="_blank"
+                  rel="noreferrer"
+                >
                   Github 仓库
                 </a>{' '}
                 浏览、下载代码。
               </p>
               <div>
                 <h2>博客成长史</h2>
-                <p>
+                <div>
                   <div>自2017年开始构建我的个人博客。</div>
                   <div>
                     最初，我的博客时建立在GitHub的个人主页之上，享受着开源社区的便利与支持。
@@ -102,14 +119,16 @@ export function AuthorLayout({ children }: Props) {
                     随着时间推移，为了进一步提升博客的稳定性与自主控制权，我购置了网络存储设备（NAS），并在其上通过容器化技术部署了我的博客，
                     同时利用阿里云的服务进行外部访问的优化与中转。如今，我的个人博客已在NAS上稳健运行，成为我日常思考与创意表达的重要平台。
                   </div>
-                </p>
+                </div>
               </div>
             </div>
             <div>
               <h2>联系方式</h2>
               <p>
                 通过以下方式联系我{' '}
-                <a href={`mailto:${SITE_METADATA.email}`}>{SITE_METADATA.email}</a>{' '}
+                <a href={`mailto:${SITE_METADATA.email}`}>
+                  {SITE_METADATA.email}
+                </a>{' '}
                 或者通过其他社交媒体找到我:
               </p>
               <SocialAccounts />

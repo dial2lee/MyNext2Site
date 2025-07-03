@@ -1,29 +1,29 @@
 import { allBlogs, allSnippets } from 'contentlayer/generated'
 import { Home } from '~/components/home-page'
 import { SITE_METADATA } from '~/data/site-metadata'
-import { getCurrentlyReading, getLastWatchedMovie } from '~/db/queries'
+// import { getCurrentlyReading, getLastWatchedMovie } from '~/db/queries'
 import { allCoreContent } from '~/utils/contentlayer'
-import { fetchGithubUserActivities } from '~/utils/github'
+// import { fetchGithubUserActivities } from '~/utils/github'
 import { sortPosts } from '~/utils/misc'
-import { getRecentlyPlayed } from './api/spotify/spotify'
+// import { getRecentlyPlayed } from './api/spotify/spotify'
 
 const MAX_POSTS_DISPLAY = 3
 const MAX_SNIPPETS_DISPLAY = 4
-const GITHUB_USER = SITE_METADATA.github.split('/').pop()
+// const GITHUB_USER = SITE_METADATA.github.split('/').pop()
 
 export default async function HomePage() {
-  let promises = await Promise.allSettled([
-    getCurrentlyReading(),
-    getLastWatchedMovie(),
-    getRecentlyPlayed(),
-    fetchGithubUserActivities({ username: GITHUB_USER }),
-  ])
-  let [
-    currentlyReadingBook,
-    lastWatchedMovie,
-    recentlyPlayed,
-    githubActivities,
-  ] = promises
+  // let promises = await Promise.allSettled([
+  //   getCurrentlyReading(),
+  //   getLastWatchedMovie(),
+  //   getRecentlyPlayed(),
+  //   fetchGithubUserActivities({ username: GITHUB_USER }),
+  // ])
+  // let [
+  //   currentlyReadingBook,
+  //   lastWatchedMovie,
+  //   recentlyPlayed,
+  //   githubActivities,
+  // ] = promises
 
   return (
     <Home
@@ -32,22 +32,22 @@ export default async function HomePage() {
         0,
         MAX_SNIPPETS_DISPLAY,
       )}
-      currentlyReading={
-        currentlyReadingBook.status === 'fulfilled'
-          ? currentlyReadingBook.value
-          : null
-      }
-      lastWatchedMovie={
-        lastWatchedMovie.status === 'fulfilled' ? lastWatchedMovie.value : null
-      }
-      recentlyPlayed={
-        recentlyPlayed.status === 'fulfilled'
-          ? recentlyPlayed.value
-          : { ok: false, error: 'Failed to fetch recently played data.' }
-      }
-      githubActivities={
-        githubActivities.status === 'fulfilled' ? githubActivities.value : null
-      }
+      // currentlyReading={
+      //   currentlyReadingBook.status === 'fulfilled'
+      //     ? currentlyReadingBook.value
+      //     : null
+      // }
+      // lastWatchedMovie={
+      //   lastWatchedMovie.status === 'fulfilled' ? lastWatchedMovie.value : null
+      // }
+      // recentlyPlayed={
+      //   recentlyPlayed.status === 'fulfilled'
+      //     ? recentlyPlayed.value
+      //     : { ok: false, error: 'Failed to fetch recently played data.' }
+      // }
+      // githubActivities={
+      //   githubActivities.status === 'fulfilled' ? githubActivities.value : null
+      // }
     />
   )
 }
