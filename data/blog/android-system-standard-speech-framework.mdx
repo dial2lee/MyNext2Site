@@ -27,7 +27,7 @@ Android系统的TextToSpeech 机制的优点有很多：
 - 对于需要使用 TTS 的请求 App 而言：无需关心 TTS 的具体实现，通过 TextToSpeech API 即用即有
 - 对于需要对外提供 TTS 能力的实现 Engine 而言，无需维护复杂的 TTS 时序和逻辑，按照 TextToSpeechService 框架的定义对接即可，无需关心系统如何将实现和请求进行衔接
 
-### 服务端
+### 播报服务端
 
 只需实现TextToSpeechService服务接口并在AndroidManifest中配置服务特有的intent filter即可实现一个简单语音播报服务。
 
@@ -40,7 +40,7 @@ Android系统的TextToSpeech 机制的优点有很多：
 </intent-filter>
 ```
 
-### 客户端
+### 播报客户端
 
 TextToSpeech API 总体比较简单，最主要的是提供初始化 TTS 接口的 TextToSpeech() 构造函数和初始化后的回调 OnInitListener，后续的播放语音的speak()，播报的状态会通过注册的UtteranceProgressListener回调返回。
 
@@ -59,7 +59,7 @@ Android系统识别框架如同TTS一样也提供了客户端（SpeechRecognizer
 adb shell settings get secure voice_recognition_service
 ```
 
-### 服务端
+### 识别服务端
 
 通过继承 RecognitionService 实现最重要的几个抽象方法并在AndroidManifest中配置服务特有的intent filter即可提供语音识别服务
 
@@ -74,7 +74,7 @@ adb shell settings get secure voice_recognition_service
 </intent-filter>
 ```
 
-### 客户端
+### 识别客户端
 
 通过SpeechRecognizer.*isRecognitionAvailable可以检测识别服务是否可用，*调用静态方法 createSpeechRecognizer() 获取识别客户端，startListening发起识别，并可通过设置回调RecognitionListener监听识别的状态和识别的结果
 
@@ -89,7 +89,7 @@ adb shell settings get secure voice_recognition_service
 
 通过对接系统的Voice Interaction接口可以便捷地实现一些语音交互功能。比如在删除某项数据的时候，App 可以调度这些服务发起语音提示，并等待用户发出确认或取消的语音指令，其识别之后自动将结果返回回来，App 接棒完成后续的处理。
 
-### 服务端
+### 交互服务端
 
 VIA 的核心服务 `VoiceInteractionService` 依赖 SystemService 的调度，该服务名为 `VoiceInteractionManagerService`。
 
@@ -101,7 +101,7 @@ VIA 的核心服务 `VoiceInteractionService` 依赖 SystemService 的调度，�
 
 当识别到的结果和目标意图符合或模糊匹配上的话，将会回调 Request 的相应 Callback。
 
-### 客户端
+### 交互客户端
 
 这里已确认请求为例：
 
