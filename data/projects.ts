@@ -35,11 +35,11 @@ export const PROJECTS: Project[] = [
   },
   {
     type: 'work',
-    title: 'claude code agents',
+    title: 'claude code toolkit',
     description:
-      'A collection of Claude AI agents for automating tasks and enhancing productivity.',
+      'Claude-based agents and command workflows for code review, debugging, docs, and PR automation.',
     imgSrc: '/static/images/ai-generated-code-96.png',
-    repo: 'weaverse/claude-code-agents',
+    repo: 'weaverse/claude-code-toolkit',
     builtWith: ['Claude', 'Iterm2', 'Markdown'],
   },
   {
