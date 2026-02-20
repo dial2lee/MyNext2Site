@@ -53,7 +53,7 @@ export async function generateMetadata(props: {
       title: post.title,
       description: post.summary,
       siteName: SITE_METADATA.title,
-      locale: 'en_US',
+      locale: 'zh-CN',
       type: 'article',
       publishedTime: publishedAt,
       modifiedTime: modifiedAt,
@@ -88,8 +88,8 @@ export default async function Page(props: {
     return notFound()
   }
 
-  let prev = sortedCoreContents[postIndex + 1]
-  let next = sortedCoreContents[postIndex - 1]
+  let prev = sortedCoreContents[postIndex - 1]
+  let next = sortedCoreContents[postIndex + 1]
   let post = allBlogs.find((p) => p.slug === slug) as Blog
   let authorList = post?.authors || ['default']
   let authorDetails = authorList.map((author) => {

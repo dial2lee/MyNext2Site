@@ -10,7 +10,7 @@ if (!process.env.DATABASE_URL) {
 export default defineConfig({
   schema: './db/schema.ts',
   out: './supabase/migrations',
-  dialect: 'postgresql',
+  dialect: 'mysql',
   casing: 'snake_case',
   dbCredentials: {
     url: process.env.DATABASE_URL,

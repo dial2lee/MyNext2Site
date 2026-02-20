@@ -1,0 +1,50 @@
+---
+heading: 'Android签名'
+title: '从Android源码生成系统签名文件'
+date: '2024-06-03 15:42'
+icon: 'Android'
+summary: '从Android源码生成系统签名文件'
+tags: ['android', '签名']
+---
+
+> 系统级应用开发过程中存在使用系统签名文件来生成apk文件从而获取额外的能力，这里讲述如何通过Android源码的编译的文件生成对应系统的apk签名文件
+
+### 先决条件
+
+- Android源码已经经过编译
+
+### 源码签名文件
+
+Android标准签名文件位于源码/build/target/product/security目录下，四组默认签名供Android.mk在编译APK使用。主要有4个key：
+
+```
+~/AOSP/android6.0/build/target/product/security$ ls
+Android.mk      platform.x509.pem  testkey.pk8       verity.x509.pem
+media.pk8       README             testkey.x509.pem
+media.x509.pem  shared.pk8         verity_key
+platform.pk8    shared.x509.pem    verity.pk8
+```
+
+- testkey: 普通签名APK,默认情况下使用。
+- platform: 该APK完成一些系统的核心功能。经过对系统中存在的文件夹的访问测试，这种方式编译出来的APK所在进程的UID为system。
+- shared: 该APK需要和home/contacts进程共享数据。
+- media: 该APK是media/download系统中的一环。
+
+签名文件后缀.pk8代表私钥，.x509.pem为公钥，它们都是成对出现；
+
+使用platform来签名的apk拥有和system相同的签名，因此会拥有一些额外的系统权限，当然应用需要配置android:sharedUserId="android.uid.system"才能有用！
+
+### 生成Apk签名文件
+
+```
+//如果之前没有生成platform.pem文件，现在可以执行以下命令生成
+openssl pkcs8 -inform DER -nocrypt -in platform.pk8 -out platform.pem
+
+//生成platform.p12文件，设置对应的密码和alias名（app签名使用到）
+openssl pkcs12 -export -in platform.x509.pem -out platform.p12 -inkey platform.pem -password pass:密码 -name 名称
+
+//生成platform.jks（app使用的签名文件），启动
+keytool -importkeystore -deststorepass 密码 -destkeystore ./platform.jks -srckeystore ./platform.p12 -srcstoretype PKCS12 -srcstorepass 密码
+
+//剩下的就是将platform.jks拷贝到app工程目录下设置alias名和密码即可
+```

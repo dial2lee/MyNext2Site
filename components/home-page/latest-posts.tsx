@@ -22,7 +22,7 @@ export function LatestPosts({
       <div className="flex justify-between pb-4 md:pb-8">
         <div className="space-y-4">
           <h3 className="flex text-2xl font-bold sm:text-2xl sm:leading-10 md:text-4xl">
-            <span className="mr-2 md:mr-3">Latest</span>
+            <span className="mr-2 md:mr-3">最近的</span>
             <button
               type="button"
               className={clsx(
@@ -34,7 +34,7 @@ export function LatestPosts({
               onClick={() => setView('posts')}
             >
               <GrowingUnderline data-umami-event="latest-posts">
-                posts
+                文章
               </GrowingUnderline>
             </button>
             <span className="mx-1">/</span>
@@ -49,7 +49,7 @@ export function LatestPosts({
               onClick={() => setView('snippets')}
             >
               <GrowingUnderline data-umami-event="latest-snippets">
-                snippets
+                片段
               </GrowingUnderline>
             </button>
           </h3>
@@ -61,8 +61,10 @@ export function LatestPosts({
             aria-label="All posts"
           >
             <GrowingUnderline data-umami-event="all-posts">
-              <span className="hidden md:inline-block">View all {view}</span>
-              <span className="md:hidden">More</span> &rarr;
+              <span className="hidden md:inline-block">
+                所有{view === 'posts' ? '文章' : '片段'}
+              </span>
+              <span className="md:hidden">所有</span> &rarr;
             </GrowingUnderline>
           </Link>
         </div>

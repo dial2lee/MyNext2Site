@@ -41,42 +41,27 @@ export function TypedBios() {
       ])}
     >
       <ul id="bios" className="hidden">
+        <li>我是一个学习者、建设者和自由追寻者。</li>
+        <li>我住在中国南京。</li>
+        <li>我出生在一马平川的华北平原。</li>
+        <li>我学的第一门编程语言是C语言。</li>
+        <li>我目前专注于语音交互应用的开发。</li>
         <li>
-          I'm aliased as <span className="font-medium">Leo</span> at work.
-        </li>
-        <li>I'm a learner, builder, and freedom seeker.</li>
-        <li>I live in Ha Noi, Viet Nam.</li>
-        <li>I was born in the beautiful Moc Chau plateau.</li>
-        <li>My first programming language I learned was Pascal.</li>
-        <li>I love web development.</li>
-        <li>I'm focusing on building eCommerce software.</li>
-        <li>I work mostly with JS/TS technologies.</li>
-        <li>I'm Tu Le's husband.</li>
-        <li>
-          I'm a dog-person. <Twemoji emoji="dog" />
+          我主要使用Java技术。
+          <Twemoji emoji="java" />
         </li>
         <li>
-          I'm a sport-guy. I love
-          <span className="ml-1">
-            <Twemoji emoji="soccer-ball" />,
-            <Twemoji emoji="man-swimming" />,
-            <Twemoji emoji="ping-pong" />,
-            <Twemoji emoji="volleyball" />
-          </span>
-        </li>
-        <li>I love watching football.</li>
-        <li>
-          I love playing piano & guitar. <Twemoji emoji="musical-keyboard" /> &{' '}
-          <Twemoji emoji="guitar" />
-        </li>
-        <li>I love rock music.</li>
-        <li>
-          I love playing chess. <Twemoji emoji="chess-pawn" />
+          我是一个钓鱼爱好者。
+          <Twemoji emoji="fishing" />
         </li>
         <li>
-          I love playing video games, PES is my favorite one.{' '}
-          <Twemoji emoji="video-game" />.
+          我喜欢徒步。
+          <Twemoji emoji="on-foot" />
         </li>
+        <li>
+          我喜欢历史和地理。 <Twemoji emoji="history" /> & <Twemoji emoji="geography" />
+        </li>
+        <li>我希望有一天能够走遍自己的清单。</li>
       </ul>
       <span ref={el} className="text-neutral-900 dark:text-neutral-200" />
     </div>

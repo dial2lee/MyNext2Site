@@ -1,0 +1,69 @@
+---
+title: 'Android Gradle发布配置'
+date: '2017-12-08 15:06:25'
+tags: ['android', 'gradle']
+draft: false
+summary: ''
+authors: ['default']
+---
+
+## 设置项目属性
+
+1. Gradle构建文件支持用一个简单的ext（extra）语法定义属性，一次定义全局使用
+
+```Gradle
+ext {
+  def AAVersion = '4.0-SNAPSHORT'
+}
+
+dependencies {
+  compile "org.androidannotations:androidannotation-api:$AAVersion"
+}
+```
+
+2. 另外可以使用gradle.properties配置属性
+
+```properties
+login='user'
+pass='xxxxx'
+```
+
+```Gradle
+repositories {
+  maven {
+    url 'xxxxxxxx'
+    credentials {
+      username login
+      password pass
+    }
+  }
+}
+```
+
+也可以通过命令行提供变量
+./gradlew -Plogin=name -Ppass=xxxxx assembleDebug
+
+## 升级到新版本Gradle
+
+1. 修改gradle-wrapper.properties最后一行的地址版本（具体可用版本可从[Gradle](http://services.gradle.org/distributions/)查看），终端项目目录执行./gradlew build
+2. 从[Gradle](http://services.gradle.org/distributions/)下载需要的版本，然后解压放置到Android Studio配置的Gradle目录
+
+## 在项目之间分享设置
+
+1. allprojects有一个集合组成，其中包含了当前项目和所有子项目
+
+```Gradle
+allprojects {
+  repositorires {
+    jcenter()
+  }
+}
+```
+
+2. subprojects属性返回所有子项目的集合
+
+```Gralde
+subprojects {
+  apply plugin: 'com.android.library'
+}
+```

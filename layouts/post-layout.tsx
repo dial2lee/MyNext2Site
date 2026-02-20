@@ -1,7 +1,7 @@
 import type { Author, Blog } from 'contentlayer/generated'
 import type { ReactNode } from 'react'
-import { BackToPosts } from '~/components/blog/back-to-posts'
-import { Banner } from '~/components/blog/banner'
+// import { BackToPosts } from '~/components/blog/back-to-posts'
+// import { Banner } from '~/components/blog/banner'
 import { BlogMeta } from '~/components/blog/blog-meta'
 import { Comments } from '~/components/blog/comments'
 import { PostNav } from '~/components/blog/post-nav'
@@ -47,9 +47,9 @@ export function PostLayout({ content, next, prev, children }: LayoutProps) {
         <div className="space-y-4">
           <TagsList tags={tags} />
           <PostTitle>{title}</PostTitle>
-          <div className="space-y-4 pt-4 md:pt-10">
-            <Banner banner={images?.[0] || SITE_METADATA.socialBanner} />
-          </div>
+          {/*<div className="space-y-4 pt-4 md:pt-10">*/}
+          {/*  <Banner banner={images?.[0] || SITE_METADATA.socialBanner} />*/}
+          {/*</div>*/}
           <div className="flex items-center justify-between gap-2 pb-4 lg:pt-2">
             <BlogMeta
               date={date}
@@ -89,9 +89,9 @@ export function PostLayout({ content, next, prev, children }: LayoutProps) {
         <div className="space-y-4">
           <PostNav
             next={next}
-            nextLabel="Next post"
+            nextLabel="下一篇"
             prev={prev}
-            prevLabel="Previous post"
+            prevLabel="上一篇"
           />
           <Comments configs={{ reactions: '0' }} />
         </div>

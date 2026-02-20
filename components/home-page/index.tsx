@@ -3,7 +3,7 @@ import { ProfileCard } from '~/components/cards/profile'
 import { Container } from '~/components/ui/container'
 import { Twemoji } from '~/components/ui/twemoji'
 import type { CoreContent } from '~/types/data'
-import { ActivitiesFeed } from './activities/feed'
+// import { ActivitiesFeed } from './activities/feed'
 import { Greeting } from './greeting'
 import { Intro } from './intro'
 import { LatestPosts } from './latest-posts'
@@ -26,20 +26,14 @@ export function Home({
             <Intro />
             <TypedBios />
             <div className="mt-4 mb-6 md:mb-8">
-              <p>
-                I started learning to code in 2016 and have been hooked ever
-                since.
-              </p>
-              <p>I landed my first job as a Python coding mentor in 2017.</p>
-              <p>I have a passion for JS/TS, web dev, and eCommerce.</p>
-              <p>
-                I started this blog to document and share my knowledge &
-                experience.
-              </p>
+              <p>我从2009年开始学习编码，从那以后就迷上了。</p>
+              <p>我在2011年找到了第一份Android编程的工作。</p>
+              <p>我对Android和Web开发充满热情。</p>
+              <p>我创办这个博客是为了记录和分享我的知识和经验。</p>
             </div>
             <BlogLinks />
             <p className="my-6 flex md:my-8">
-              <span className="mr-2">Happy reading</span>
+              <span className="mr-2">享受你的阅读时光</span>
               <Twemoji emoji="clinking-beer-mugs" />
             </p>
           </div>
@@ -49,7 +43,7 @@ export function Home({
         </div>
       </div>
       <LatestPosts posts={posts} snippets={snippets} />
-      <ActivitiesFeed />
+      {/*<ActivitiesFeed />*/}
       {/* {SITE_METADATA.newsletter?.provider && (
         <div className="flex items-center justify-center py-4 lg:py-10">
           <NewsletterForm />

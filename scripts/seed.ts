@@ -91,10 +91,7 @@ export async function seedBooksUsingRssFeed() {
 
       if (validBooks.length > 0) {
         try {
-          let savedBooks = await upsertBooks(validBooks)
-          console.log(
-            `📚 ${savedBooks.length}/${data.items.length} books saved to database.`,
-          )
+          await upsertBooks(validBooks)
         } catch (error) {
           console.error(`❌ Error saving books to database: ${error.message}`)
         }
@@ -227,10 +224,7 @@ export async function seedBooksByParsingCSV() {
 
             if (validBooks.length > 0) {
               try {
-                let savedBooks = await upsertBooks(validBooks)
-                console.log(
-                  `📚 ${savedBooks.length}/${books.length} books saved to database.`,
-                )
+                await upsertBooks(validBooks)
               } catch (error: unknown) {
                 let errorMessage =
                   error instanceof Error ? error.message : String(error)
@@ -258,6 +252,7 @@ const IMDB_CSV_FILE_PATH = path.join(
   'scripts',
   'imdb-movies.csv',
 )
+
 async function seedMovies() {
   console.log('Processing IMDB movies...')
   if (!fs.existsSync(IMDB_CSV_FILE_PATH)) {
@@ -356,10 +351,7 @@ async function seedMovies() {
 
             if (validMovies.length > 0) {
               try {
-                let savedMovies = await upsertManyMovies(validMovies)
-                console.log(
-                  `🎬 ${savedMovies.length}/${movies.length} movies saved to database.`,
-                )
+                await upsertManyMovies(validMovies)
               } catch (error: unknown) {
                 let errorMessage =
                   error instanceof Error ? error.message : String(error)

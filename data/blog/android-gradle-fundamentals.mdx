@@ -1,0 +1,145 @@
+---
+title: 'Android开发Gradle基础'
+date: '2017-12-03 13:24:04'
+tags: ['android', 'gradle']
+draft: false
+summary: 'Android的Gradle插件针对Android应用添加了大量的特性，包括构建类型（build type）、定制（product flavor）、签名管理（signing configuration）、库项目（library project）等'
+authors: ['default']
+---
+
+> Android的Gradle插件针对Android应用添加了大量的特性，包括构建类型（build type）、定制（product flavor）、签名管理（signing configuration）、库项目（library project）等
+
+## Android中的Gradle构建文件
+
+- settings.gradle
+
+配置项目所需包含的module
+
+- 根目录build.gradle
+
+```gradle
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.0.1'
+    }
+}
+
+allprojects {
+    repositories {
+        jcenter()
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
+```
+
+1. 配置Android Gradle插件从jcenter仓库下载
+2. allprojects设置所有项目都默认从jcenter仓库下载第三方库
+3. 自定义clean任务，type: Delete表示这个task为Gradle内置的Delete task的一个自定义实现
+
+- 子项目build.gradle
+
+```gradle
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 26
+    buildToolsVersion "26.0.2"
+    defaultConfig {
+        applicationId "com.diallee.mytest"
+        minSdkVersion 16
+        targetSdkVersion 26
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    repositories {
+        flatDir {
+            dirs 'libs'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    compile 'com.android.support:appcompat-v7:26.0.0'
+}
+```
+
+1. 将Android插件应用到构建系统
+2. 项目编译、信息等一些配置
+3. 项目依赖库配置，fileTree libs目录下的以.jar结尾的文件都加入到编译路径（repositories搜索依赖路径配置）；引用espresso库并加入到Android测试编译阶段；引用appcompat库
+
+## 命令行执行Gradle构建
+
+- 项目跟目录已经内置了gradlew脚本，使用gradle/wrapper下的gradle-wrapper.jar和gradle.wrapper.properties文件来启动进程
+- gradle.wrapper.properties 设置了使用的gradle版本和下载的目录
+- ./gradlew build 编译构建 ./gradlew tasks 显示可以使用的任务（-all显示任务的依赖）
+- 空格分隔多个任务，./gradlew lint assembleDebug
+
+## 添加第三方依赖库
+
+- Gradle几种方式来定义依赖，最常见的是使用引号，并通过冒号分隔组名、名称、版本号
+
+compile 'com.android.support:appcompat-v7:26.0.0'
+compile group:'com.android.support', name:'appcompat-v7', version:'26.0.0'
+
+- files和filesTree
+
+```gradle
+compile files('libs/a.jar', 'libs/b.jar')
+compile fileTree(dir: 'libs', include: ['*.jar'])
+```
+
+- 传递依赖
+  > 查看传递依赖 ./gradlew androidDependencies
+
+Gradle默认传递依赖，如果想针对一个特定库关掉此功能可以使用transitive标志
+runtime group:'com.squareup.retrofit2', name:'retrofit', version:'2.0.1', transitive: false
+
+如果你想要一个模块的jar不引入任何额外的依赖，可以如下设置：
+快捷：compile 'org.codehus.groovy:groovy-all:2.4@jar'
+完整：compile group:'org.codehus.groovy' name:'groovy-all', version:'2.4' ext:'jar'
+
+排除一个传递依赖
+
+```gradle
+androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+    exclude group: 'com.android.support', module: 'support-annotations'
+})
+```
+
+- 配置仓库
+
+```gradle
+repositories {
+  mavenLocal() // 本地Maven缓存
+  mavenCentral() // 公共Maven中央仓库
+  jcenter() // Bintray Jcenter仓库
+  maven {// 引用额外的仓库
+    credentials {
+      username 'username'
+      password 'password'
+    }
+    url ''
+  }
+}
+```

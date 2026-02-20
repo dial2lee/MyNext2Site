@@ -11,7 +11,7 @@ import { HEADER_NAV_LINKS } from '~/data/navigation'
 import { SITE_METADATA } from '~/data/site-metadata'
 import { Logo } from './logo'
 import { MobileNav } from './mobile-nav'
-import { MoreLinks } from './more-links'
+// import { MoreLinks } from './more-links'
 import { ThemeSwitcher } from './theme-switcher'
 
 let logged = false
@@ -39,7 +39,12 @@ export function Header() {
       )}
     >
       <div className="flex items-center justify-between gap-3">
-        <Logo />
+        <div className="flex items-center space-x-2">
+          <Logo />
+          <div className="font-greeting italic text-gray-500 dark:text-gray-400">
+            {SITE_METADATA.description}
+          </div>
+        </div>
         <div className="flex items-center gap-4">
           <div className="hidden gap-1.5 sm:flex">
             {HEADER_NAV_LINKS.map(({ title, href }) => {
@@ -55,7 +60,7 @@ export function Header() {
                 </Link>
               )
             })}
-            <MoreLinks />
+            {/*<MoreLinks />*/}
           </div>
           <div
             data-orientation="vertical"

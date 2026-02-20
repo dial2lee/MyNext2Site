@@ -1,0 +1,68 @@
+---
+title: 'Android-jenkins自动构建属性配置'
+date: '2017-12-29 14:27:40'
+tags: ['android', '构建']
+draft: false
+summary: 'Android项目在使用jenkins自动构建过程中，一个比较常用的情况是需要对构建的变体进行选择生成'
+authors: ['default']
+---
+
+> Android项目在使用jenkins自动构建过程中，一个比较常用的情况是需要对构建的变体进行选择生成。结合之前读的[《巧用Gradle构建Android应用》](https://book.douban.com/subject/26945531/)和网上的一些资料，解决了我在实际项目遇到的两种情况，现记录如下
+
+## 选择是否隐藏安装图标
+
+> 在实际项目中我们可能需要构建一些小的变动的不同版本，比如生成的Apk在安装之后不需要显示桌面图标（只供第三方调用）。
+
+1. 在项目根目录的gradle.properties文件配置一个属性HAS_LANCHER=true用于决定是否需要隐藏图标，内容如图：
+
+![](https://6d79-mysite-0g7z2gkuacfe06d6-1303437049.tcb.qcloud.la/pic/android_jenkins1.png?sign=634c09dc4de7a01da71283a04e11ba3a&t=1671674148)
+
+2. 在main moduel的build.gradle文件中定一个函数getMainAction，根据配置的属性返回不同的字符串
+
+![](https://6d79-mysite-0g7z2gkuacfe06d6-1303437049.tcb.qcloud.la/pic/android_jenkins2.png?sign=08999180705e9463ae3b72ac94233ced&t=1671674157)
+
+3. 根据实际需要在合适的位置设置manifestPlaceholders，这里在debug buildType设置mainAction为android.intent.action.MAIN字符串(测试版本不需要隐藏)，在release buildType中设置mainAction为getMainAction函数返回
+
+![](https://6d79-mysite-0g7z2gkuacfe06d6-1303437049.tcb.qcloud.la/pic/android_jenkins3.png?sign=535c110b2e439a1f5b868787fabf5a87&t=1671674164)
+
+4. 在main moduel的Manifest文件中将原来入口的Intent Filter的action的name改为引用属性的方式
+
+![](https://6d79-mysite-0g7z2gkuacfe06d6-1303437049.tcb.qcloud.la/pic/android_jenkins4.png?sign=24669892f65cc98b1704b6c315e5fbf2&t=1671674172)
+
+5. 接下来对jenkins上的项目配置进行更改，勾选参数化构建构成，增加一个布尔参数HAS_LANCHER
+
+![](https://6d79-mysite-0g7z2gkuacfe06d6-1303437049.tcb.qcloud.la/pic/android_jenkins5.png?sign=12c9aa9b3e738b2fb043bdaac0a5ceca&t=1671674180)
+
+6. 勾选如下选项应用配置的属性到构建构成中
+
+![](https://6d79-mysite-0g7z2gkuacfe06d6-1303437049.tcb.qcloud.la/pic/android_jenkins6.png?sign=a784403b3b4536aa06b93cf137bc93ee&t=1671674188)
+
+## 选择构建buildType和productFlavor
+
+> 有些项目需要配置一个项目的不同变体，在Android中可结合buildTypes和productFlavors来实现，在此讲述这些变体在jenkins中怎样选择构建（以下配置为测试使用，大家可以针对自己的项目进行更改）
+
+1. 在build.gradle中配置的buildType和productFlavor如图：
+
+![](https://6d79-mysite-0g7z2gkuacfe06d6-1303437049.tcb.qcloud.la/pic/android_jenkins7.png?sign=fc26583b990c525d33eb13b672c7d706&t=1671674195)
+
+2. 接下来对jenkins上的项目配置进行更改，勾选参数化构建构成，增加一个选择参数BUILD_TYPE和PRODUCT_FLAVORS（Choices需要和build.gradle配置的对应）
+
+![](https://6d79-mysite-0g7z2gkuacfe06d6-1303437049.tcb.qcloud.la/pic/android_jenkins8.png?sign=57ae937ef872416957fa36c67860ec28&t=1671674202)
+
+3. 修改构建的Tasks，增加BUILD_TYPE和PRODUCT_FLAVORS参数
+
+![](https://6d79-mysite-0g7z2gkuacfe06d6-1303437049.tcb.qcloud.la/pic/android_jenkins9.png?sign=17c6edd7864e0238a68fe9ef07208565&t=1671674209)
+
+## 构建实施
+
+> 通过以上的构建配置之后，构建的实施操作发生了一些变化
+
+1. 原来的'立即构建'现在变成了'参数化构建'(Build with Parameters)
+
+![](https://6d79-mysite-0g7z2gkuacfe06d6-1303437049.tcb.qcloud.la/pic/android_jenkins10.png?sign=4dae4b40a95853bf88673f091cdabae5&t=1671674216)
+
+2. 点击构建之后的界面，增加了相应的选项操作
+
+![](https://6d79-mysite-0g7z2gkuacfe06d6-1303437049.tcb.qcloud.la/pic/android_jenkins11.png?sign=7d76f4b1d0538bd2bc2bfe4e57bc1efa&t=1671674224)
+
+3.  选择->开始构建->飞起来吧

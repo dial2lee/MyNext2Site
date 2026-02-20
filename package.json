@@ -1,9 +1,9 @@
 {
-  "name": "leohuynh.dev",
+  "name": "diallee",
   "version": "2.0.0",
   "scripts": {
-    "start": "PORT=3435 next dev",
-    "dev": "PORT=3434 cross-env INIT_CWD=$PWD next dev",
+    "start": "next dev",
+    "dev": "cross-env INIT_CWD=$PWD next dev",
     "build": "cross-env INIT_CWD=$PWD next build && npm run postbuild",
     "postbuild": "cross-env NODE_OPTIONS='--experimental-json-modules' tsx ./scripts/post-build.ts",
     "serve": "next start",
@@ -35,6 +35,7 @@
     "dotenv": "^16.5.0",
     "drizzle-orm": "^0.44.2",
     "drizzle-zod": "^0.8.2",
+    "mysql2": "^3.11.5",
     "esbuild": "0.25.5",
     "github-slugger": "^2.0.0",
     "gray-matter": "^4.0.2",

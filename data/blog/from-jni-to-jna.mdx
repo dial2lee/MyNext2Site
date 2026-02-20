@@ -1,0 +1,88 @@
+---
+title: '从JNI到JNA'
+date: '2019-11-30 19:27:15'
+tags: ['java']
+draft: false
+summary: 'JNI是Java Native Interface的缩写，它提供了若干的API实现了Java和其他语言的通讯（主要是C&C++）'
+authors: ['default']
+---
+
+### JNI
+
+#### 简介
+
+> JNI是Java Native Interface的缩写，它提供了若干的API实现了Java和其他语言的通讯（主要是C&C++）。JNI一开始是为了本地已编译语言，尤其是C和C++而设计的，但是它并不妨碍你使用其他编程语言，只要调用约定受支持就可以。使用java与本地已编译的代码交互，通常会丧失平台可移植性。但是，有些情况下这样做是可以接受的，甚至是必须的。例如，使用一些旧的库与硬件、操作系统进行交互，或者为了提供程序的性能。
+
+#### 使用流程
+
+```java
+JNIExport jstring JNICALL Java_com_example_hellojni_MainActivity_stringFromJNI( JNIEnv* env,jobject thiz )
+```
+
+`jstring` 是返回值类型
+`Java_com_example_hellojni` 是包名
+`MainActivity` 是类名
+`stringFromJNI` 是方法名
+
+其中`JNIExport`和`JNICALL`是固定保留的关键字不要修改
+
+JNI开发流程的步骤：
+
+- 第1步：在Java中先声明一个native方法
+- 第2步：编译Java源文件javac得到.class文件
+- 第3步：通过javah -jni命令导出JNI的.h头文件
+- 第4步：使用Java需要交互的本地代码，实现在Java中声明的Native方法（如果Java需要与C++交互，那么就用C++实现Java的Native方法。）
+- 第5步：将本地代码编译成动态库(Windows系统下是.dll文件，如果是Linux系统下是.so文件，如果是Mac系统下是.jnilib)
+- 第6步：通过Java命令执行Java程序，最终实现Java调用本地代码。
+
+### JNA
+
+#### 简介
+
+> JNA（Java Native Access）提供一组Java工具类用于在运行期间动态访问系统本地库而不需要编写任何Native/JNI代码。开发人员只要在一个java接口中描述目标native library的函数与结构，JNA将自动实现Java接口道native function的映射。
+
+#### 项目地址
+
+https://github.com/java-native-access/jna
+
+#### 使用流程
+
+JNA开发流程的步骤：
+
+- 引用JNA相关的jar包和so库
+
+- 实现一个动态库，通JNI步骤
+
+- 创建Library，成功实现Java调用C/C++函数代码库
+
+  ```java
+  import com.sun.jna.Library;
+  import com.sun.jna.Native;
+  import com.sun.jna.Pointer;
+  import com.sun.jna.ptr.IntByReference;
+  import com.sun.jna.ptr.PointerByReference;
+
+  //继承Library，用于加载库文件
+  public interface Clibrary extends Library {
+      //加载libhello.so链接库
+      Clibrary INSTANTCE = (Clibrary) Native.loadLibrary("sayhello", Clibrary.class);
+      //此方法为链接库中的方法
+
+      int sayHello();
+  }
+  ```
+
+以上代码继承自Library 或StdCallLibrary，默认的是继承Library ，如果动态链接库里的函数是以stdcall方式输出的，那么就继承StdCallLibrary，比如众所周知的kernel32库
+
+接口内部需要一个公共静态常量：INSTANCE，通过这个常量，就可以获得这个接口的实例，从而使用接口的方法，也就是调用外部dll/so的函数。
+
+- 调用实现接口
+
+```java
+int result = Clibrary.INSTANTCE.sayHello();
+Log.d("MainActivity","sayHello的放回结果:"+result);
+```
+
+### 比较
+
+JNA是建立在JNI技术基础之上的一个框架。使用JNI技术，不仅可以实现Java访问C函数，也可以实现C语言调用Java代码。而JNA只能实现Java访问C函数，作为一个Java框架，自然不能实现C语言调用Java代码。此时，你还是需要使用JNI技术。
