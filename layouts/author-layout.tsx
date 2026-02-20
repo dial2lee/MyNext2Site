@@ -2,9 +2,9 @@ import type { Author } from 'contentlayer/generated'
 import type { ReactNode } from 'react'
 import { CareerTimeline } from '~/components/author/career'
 import { SocialAccounts } from '~/components/author/social-accounts'
-import { Button } from '~/components/ui/button'
+// import { Button } from '~/components/ui/button'
 import { Container } from '~/components/ui/container'
-import { Image } from '~/components/ui/image'
+// import { Image } from '~/components/ui/image'
 import { PageHeader } from '~/components/ui/page-header'
 import { Twemoji } from '~/components/ui/twemoji'
 import { SITE_METADATA } from '~/data/site-metadata'
@@ -18,7 +18,7 @@ export function AuthorLayout({ children }: Props) {
   return (
     <Container className="pt-4 lg:pt-12">
       <PageHeader
-        title="关于我"
+        title="关于"
         description="关于我是谁、我正在做什么以及我为什么开始写这个博客的。没什么紧要的，只是对幕后打字人的一点介绍。"
         className="border-b border-gray-200 dark:border-gray-700"
       />
@@ -26,14 +26,15 @@ export function AuthorLayout({ children }: Props) {
         <div className="prose prose-lg max-w-full dark:prose-invert">
           {/* About Me Section */}
           <section>
-            <h2 className="mt-0">About Me</h2>
+            <h2 className="mt-0">关于我</h2>
             <div>
               <h2 className="mt-0">
                 大家好 <Twemoji emoji="waving-hand" />
               </h2>
               <p>
-                我目前主要是使用<strong>Java</strong>、<strong>Kotlin</strong>来构建Android应用。
-                我也对<strong>JavaScript</strong>、<strong>React</strong>等Web前端开发充满兴趣。
+                我目前主要是使用<strong>Java</strong>、<strong>Kotlin</strong>
+                来构建Android应用。 我也对<strong>JavaScript</strong>、
+                <strong>React</strong>等Web前端开发充满兴趣。
                 也希望将人工智能和物联网带入我们的生活。
               </p>
               <p>
@@ -58,62 +59,78 @@ export function AuthorLayout({ children }: Props) {
           </section>
           <section>
             <h2>技术栈</h2>
-              <p>
-                  此博客托管于{' '}
-                  <a href="https://www.aliyun.com/" target="_blank">
-                      阿里云
-                  </a>
-                  , 基于{' '}
-                  <a href="https://nextjs.org/" target="_blank">
-                      Next.js
-                  </a>{' '}
-                  and{' '}
-                  <a href="https://tailwindcss.com/" target="_blank">
-                      Tailwind CSS
-                  </a>
-              </p>
-              <p>
-                  非常感谢{' '}
-                  <a href="https://www.leohuynh.dev/" target="_blank">
-                      Tuan Anh Huynh
-                  </a>{' '}
-                  提供的开源、美观、易于使用的博客模板。
-              </p>
-              <p>
-                  你也可以打开他的{' '}
-                  <a href="https://github.com/hta218/leohuynh.dev" target="_blank">
-                      Github 仓库
-                  </a>{' '}
-                  浏览、下载代码。
-              </p>
+            <p>
+              此博客托管于{' '}
+              <a
+                href="https://www.aliyun.com/"
+                target="_blank"
+                rel="noreferrer"
+              >
+                阿里云
+              </a>
+              , 基于{' '}
+              <a href="https://nextjs.org/" target="_blank" rel="noreferrer">
+                Next.js
+              </a>{' '}
+              and{' '}
+              <a
+                href="https://tailwindcss.com/"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Tailwind CSS
+              </a>
+            </p>
+            <p>
+              非常感谢{' '}
+              <a
+                href="https://www.leohuynh.dev/"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Tuan Anh Huynh
+              </a>{' '}
+              提供的开源、美观、易于使用的博客模板。
+            </p>
+            <p>
+              你也可以打开他的{' '}
+              <a
+                href="https://github.com/hta218/leohuynh.dev"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Github 仓库
+              </a>{' '}
+              浏览、下载代码。
+            </p>
+            <div>
+              <h2>博客成长史</h2>
+              <div>自2017年开始构建我的个人博客。</div>
               <div>
-                  <h2>博客成长史</h2>
-                  <p>
-                      <div>自2017年开始构建我的个人博客。</div>
-                      <div>
-                          最初，我的博客时建立在GitHub的个人主页之上，享受着开源社区的便利与支持。
-                      </div>
-                      然而，出于特定考量，博客迁移至Coding平台的个人主页服务，继续我的写作与分享之路。
-                      <div>
-                          随着对博客功能性和灵活性需求的增长，我决定采用Next.js框架，并将其部署在Vercel平台上，以追求更佳的用户体验和技术实现。
-                      </div>
-                      <div>
-                          随着时间推移，为了进一步提升博客的稳定性与自主控制权，我购置了网络存储设备（NAS），并在其上通过容器化技术部署了我的博客，
-                          同时利用阿里云的服务进行外部访问的优化与中转。如今，我的个人博客已在NAS上稳健运行，成为我日常思考与创意表达的重要平台。
-                      </div>
-                  </p>
+                最初，我的博客时建立在GitHub的个人主页之上，享受着开源社区的便利与支持。
               </div>
+              然而，出于特定考量，博客迁移至Coding平台的个人主页服务，继续我的写作与分享之路。
+              <div>
+                随着对博客功能性和灵活性需求的增长，我决定采用Next.js框架，并将其部署在Vercel平台上，以追求更佳的用户体验和技术实现。
+              </div>
+              <div>
+                随着时间推移，为了进一步提升博客的稳定性与自主控制权，我购置了网络存储设备（NAS），并在其上通过容器化技术部署了我的博客，
+                同时利用阿里云的服务进行外部访问的优化与中转。如今，我的个人博客已在NAS上稳健运行，成为我日常思考与创意表达的重要平台。
+              </div>
+            </div>
           </section>
           <section>
-              <h2>联系方式</h2>
-              <p>
-                  通过以下方式联系我{' '}
-                  <a href={`mailto:${SITE_METADATA.email}`}>{SITE_METADATA.email}</a>{' '}
-                  或者通过其他社交媒体找到我:
-              </p>
-              <SocialAccounts />
+            <h2>联系方式</h2>
+            <p>
+              通过以下方式联系我{' '}
+              <a href={`mailto:${SITE_METADATA.email}`}>
+                {SITE_METADATA.email}
+              </a>{' '}
+              或者通过其他社交媒体找到我:
+            </p>
+            <SocialAccounts />
           </section>
-          </div>
+        </div>
       </div>
     </Container>
   )
