@@ -96,6 +96,11 @@ module.exports = () => {
           destination: '/blog/crawling-goodreads-books-data',
           permanent: true,
         },
+        {
+          source: '/privacy/parkingspot',
+          destination: '/static/privacy_agreement/parking_spot.html',
+          permanent: true,
+        },
       ]
     },
     async headers() {
