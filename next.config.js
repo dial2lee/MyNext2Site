@@ -101,6 +101,11 @@ module.exports = () => {
           destination: '/static/privacy_agreement/parking_spot.html',
           permanent: true,
         },
+        {
+          source: '/privacy/parkingspot_huawei',
+          destination: '/static/privacy_agreement/parking_spot_huawei.html',
+          permanent: true,
+        },
       ]
     },
     async headers() {
